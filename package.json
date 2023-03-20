@@ -1,0 +1,24 @@
+{
+  "name": "juicee",
+  "version": "1.0.0",
+  "description": "Food Order App",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josh-fie/Juicee.git"
+  },
+  "author": "Josh Fieldhouse",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josh-fie/Juicee/issues"
+  },
+  "homepage": "https://github.com/josh-fie/Juicee#readme",
+  "dependencies": {
+    "live-server": "^1.2.2",
+    "lodash-es": "^4.17.21",
+    "parcel": "^2.8.3"
+  }
+}
