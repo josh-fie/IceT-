@@ -1,0 +1,89 @@
+:root {
+  --main-color: #64a5f5;
+  --secondary-color: #7fff00;
+  --highlight-color: black;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body */
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fff;
+  color: black;
+  font-size: 15px;
+}
+
+.container {
+  width: fit-content;
+}
+
+/* Showcase Startpage Overlay*/
+.showcase_overlay {
+  /* display: flex; */
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+}
+
+.showcase_overlay img {
+  width: 60%;
+}
+
+.showcase_overlay button {
+  width: 150px;
+  height: 50px;
+  background-color: var(--main-color);
+  color: white;
+  border-radius: 10px;
+  border-style: none;
+}
+
+.showcase_overlay h3 {
+  font-weight: normal;
+  color: var(--highlight-color);
+  font-size: 12px;
+}
+
+/* Media Queries to define size of logo based on screen size */
+
+/* end of startpage overlay */
+
+/* Navigation */
+
+.navigation {
+  display: flex;
+  justify-content: space-around;
+  height: 150px;
+  width: 100vw;
+  border-bottom: 1px var(--highlight-color);
+  background-color: #64a5f5;
+}
+
+.logo {
+  flex: 1;
+}
+
+.logo img {
+  height: 100%;
+}
+
+.navigation a {
+  flex: 5;
+}
+
+.navigation a img {
+  height: 100%;
+  margin: auto;
+}
