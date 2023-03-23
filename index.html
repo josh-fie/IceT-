@@ -19,7 +19,7 @@
 
       <section class="navigation">
         <div class="logo">
-          <img src="/img/IceT_logo.png" alt="IceT! logo" />
+          <img src="/img/IceT_logo_full_startpage.png" alt="IceT! logo" />
         </div>
         <ul class="nav-items">
           <li>
@@ -48,18 +48,175 @@
         </div>
 
         <div class="products-area">
-          <div class="product-card">
+          <div class="product-card ice-cream-card">
             <h1>Ice-cream</h1>
-            <img src="/img/vectorstock_37226220.png" alt="Ice-cream cone" />
-          </div>
-          <div class="product-card">
-            <h1>Tea</h1>
             <img
-              src="/img/vectorstock_30103330.png"
-              alt="Takeaway tea container"
+              src="/img/ice-cream_base_image_transparent.png"
+              alt="Ice-cream cone"
             />
           </div>
+          <div class="product-card tea-card">
+            <h1>Tea</h1>
+            <img src="/img/tea_base.png" alt="Takeaway tea container" />
+          </div>
         </div>
+
+        <!-- Ice-Cream Modal -->
+        <dialog id="ice-cream-modal">
+          <div class="modal-container">
+            <h2>Ice-Creams</h2>
+            <h6>
+              Select your quantites and confirm the selection to add the items
+              to the basket
+            </h6>
+            <div class="product-container">
+              <div class="product-line">
+                <img src="/img/Vanilla_Ice_cream.png" alt="Vanilla Ice-cream" />
+                <div>
+                  <h3>Vanilla Cone</h3>
+                  <h6>Calories: 130kcal</h6>
+                  <h6>£5.00</h6>
+                </div>
+                <div class="quantity-counter">
+                  <img
+                    src="/logo/minus-sign.svg"
+                    alt="Remove from basket"
+                    class="remove_basket_icon"
+                  />
+                  <span>0</span>
+                  <img
+                    src="/logo/plus-sign.svg"
+                    alt="Add to basket"
+                    class="add_basket_icon"
+                  />
+                </div>
+              </div>
+              <div class="product-line">
+                <img src="/img/Cherry_Ice_cream.png" alt="Cherry Ice-cream" />
+                <div>
+                  <h3>Cherry Cone</h3>
+                  <h6>Calories: 140kcal</h6>
+                  <h6>£6.00</h6>
+                </div>
+                <div class="quantity-counter">
+                  <img
+                    src="/logo/minus-sign.svg"
+                    alt="Remove from basket"
+                    class="remove_basket_icon"
+                  />
+                  <span>0</span>
+                  <img
+                    src="/logo/plus-sign.svg"
+                    alt="Add to basket"
+                    class="add_basket_icon"
+                  />
+                </div>
+              </div>
+              <div class="product-line">
+                <img
+                  src="/img/Strawberry_Ice_cream.png"
+                  alt="Strawberry Ice-cream"
+                />
+                <div>
+                  <h3>Strawberry Cone</h3>
+                  <h6>Calories: 125kcal</h6>
+                  <h6>£6.00</h6>
+                </div>
+                <div class="quantity-counter">
+                  <img
+                    src="/logo/minus-sign.svg"
+                    alt="Remove from basket"
+                    class="remove_basket_icon"
+                  />
+                  <span>0</span>
+                  <img
+                    src="/logo/plus-sign.svg"
+                    alt="Add to basket"
+                    class="add_basket_icon"
+                  />
+                </div>
+              </div>
+              <div class="product-line">
+                <img
+                  src="/img/CookieDough_Ice_cream.png"
+                  alt="Cookie-Dough Ice-cream"
+                />
+                <div>
+                  <h3>Cookie-Dough Cone</h3>
+                  <h6>Calories: 280kcal</h6>
+                  <h6>£7.00</h6>
+                </div>
+                <div class="quantity-counter">
+                  <img
+                    src="/logo/minus-sign.svg"
+                    alt="Remove from basket"
+                    class="remove_basket_icon"
+                  />
+                  <span>0</span>
+                  <img
+                    src="/logo/plus-sign.svg"
+                    alt="Add to basket"
+                    class="add_basket_icon"
+                  />
+                </div>
+              </div>
+              <div class="product-line">
+                <img
+                  src="/img/Chocolate_Ice_cream.png"
+                  alt="Chocolate Ice-cream"
+                />
+                <div>
+                  <h3>Chocolate Cone</h3>
+                  <h6>Calories: 250kcal</h6>
+                  <h6>£7.00</h6>
+                </div>
+                <div class="quantity-counter">
+                  <img
+                    src="/logo/minus-sign.svg"
+                    alt="Remove from basket"
+                    class="remove_basket_icon"
+                  />
+                  <span>0</span>
+                  <img
+                    src="/logo/plus-sign.svg"
+                    alt="Add to basket"
+                    class="add_basket_icon"
+                  />
+                </div>
+              </div>
+              <div class="product-line">
+                <img
+                  src="/img/MintChoc_Ice_cream.png"
+                  alt="Mint-Chocolate Ice-cream"
+                />
+                <div>
+                  <h3>Mint-Chocolate Cone</h3>
+                  <h6>Calories: 200kcal</h6>
+                  <h6>£6.00</h6>
+                </div>
+                <div class="quantity-counter">
+                  <img
+                    src="/logo/minus-sign.svg"
+                    alt="Remove from basket"
+                    class="remove_basket_icon"
+                  />
+                  <span>0</span>
+                  <img
+                    src="/logo/plus-sign.svg"
+                    alt="Add to basket"
+                    class="add_basket_icon"
+                  />
+                </div>
+              </div>
+            </div>
+            <button type="button" id="close-modal-button">Confirm</button>
+          </div>
+        </dialog>
+
+        <!-- Tea Modal -->
+        <dialog id="tea-modal">
+          <p>Greetings, one and all!</p>
+        </dialog>
       </div>
 
       <!-- end of startpage overlay -->
