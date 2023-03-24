@@ -171,43 +171,60 @@ body {
 
 /* Modals */
 
-dialog {
+#product-modal, #product-modal2, #product-modal3 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.1);
+  top: 80px;
+  left: 0;
   margin: auto;
-  width: 90vw;
-  height: fit-content;
+  position: fixed;
+  /* height: 90vh; */
+  overflow: auto;
   padding: 1rem;
   border: none;
-  border-radius: 4px;
+  visibility: hidden;
+  transform: scale(0.1);
+  transition: transform 300ms;
 }
 
-dialog::-webkit-scrollbar {
+#product-modal.dialog-scale, #product-modal2.dialog-scale, #product-modal3.dialog-scale{
+  visibility: visible;
+  transform: scale(1);
+}
+
+#product-modal::-webkit-scrollbar {
   width: 12px;
 }
 
-dialog::-webkit-scrollbar-track {
+#product-modal::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.1);
 }
 
-dialog::-webkit-scrollbar-thumb {
+#product-modal::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 20px;
-}
-
-dialog::backdrop {
-  background: #64a5f5;
-  opacity: 30%;
 }
 
 .modal-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  width: 75%;
+  /* height: 100%; */
+}
+
+.modal-container .close-icon-x {
+  position: absolute;
+  right: 5px;
+  top: 5px;
 }
 
 .product-container {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  height: 100%;
 }
 
 .product-container img {
@@ -243,4 +260,29 @@ img.add_basket_icon {
 .quantity-counter img,
 span {
   padding: 0 2px;
+}
+
+/* Modal Side-Bar */
+
+.modal-side-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 25%;
+  background-color: white;
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.5);;
+  /* height: 100%; */
+}
+
+.modal-side-bar img {
+  width: 75%;
+}
+
+
+#add-to-basket, #confirm-order {
+  background-color: var(--main-color);
+  padding: 20px;
+  border-radius: 5px;
+  border: .2px solid var(--secondary-color);
 }
