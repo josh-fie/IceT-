@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <script defer src="products.js"></script>
     <script defer src="script.js"></script>
     <title>IceT!</title>
   </head>
@@ -27,7 +28,7 @@
               ><img
                 src="logo/favourite.svg"
                 alt="Favourite Orders"
-                class="filter-blue favourite-orders"
+                class="filter-blue favourite-meals"
             /></a>
           </li>
           <li>
@@ -217,7 +218,7 @@
             <div class="basket-item-preview">preview</div>
             <button type="button" id="add-to-basket">Add to Basket</button>
             <dialog id="confirm-basket-add">
-              <p>Add items to your basket?</p>
+              <p>Add items to your basket and close window? Your quantities will be lost.</p>
               <button type="button">Confirm</button>
               <button type="button">Cancel</button>
             </dialog>
@@ -235,7 +236,7 @@
             <button type="button" class="close-icon-x">X</button>
             <div class="product-container">
               <div class="product-line">
-                <img src="/img/Black_Tea_Final.png" alt="Black Tea with Milk" />
+                <img src="/img/Black_Tea_Final.png" alt="Black Tea" />
                 <div>
                   <h3>Black Tea</h3>
                   <h6>Calories: 4kcal</h6>
@@ -379,7 +380,7 @@
             <div class="basket-item-preview">preview</div>
             <button type="button" id="add-to-basket">Add to Basket</button>
             <dialog id="confirm-basket-add">
-              <p>Add items to your basket?</p>
+              <p>Add items to your basket and close window? Your quantities will be lost.</p>
               <button type="button">Confirm</button>
               <button type="button">Cancel</button>
             </dialog>
@@ -421,15 +422,71 @@
           <div class="modal-side-bar">
             <img src="/logo/shopping-cart.svg" alt="Basket Logo" />
             <div class="basket-item-preview">preview</div>
-            <span>Delivery Total:</span>
-            <span>£0.00</span>
+            <span id="total-pre-vat">£0.00</span>
+            <span id="vat-amount">+ VAT £0.00</span>
+            <span id="total_inc_vat">£0.00</span>
             <button type="button" id="confirm-order">Confirm Order</button>
             <dialog id="confirm-order-completion">
+              <p>Add Order to Favourite Meals?</p>
+              <input type="checkbox" checked>
+              <input type="text" placeholder="Meal Name">
               <p>Confirm Order?</p>
+              <button type="button" class="confirm-basket">Confirm</button>
+              <button type="button">Cancel</button>
+            </dialog>
+          </div>
+        </div>
+
+        <!-- Favourite Meals -->
+        <div id="product-modal4" data-modal="4">
+          <div class="modal-container">
+            <h2>Favourite Meals</h2>
+            <h6>
+              Select your favourite meal and confirm the selection to add the items contained within
+              to the basket
+            </h6>
+            <button type="button" class="close-icon-x">X</button>
+            <div class="product-container">
+              <div class="product-line">
+                <img src="/img/Black_Tea_Final.png" alt="Black Tea with Milk" />
+                <div>
+                  <h3>Black Tea</h3>
+                  <h6>Calories: 4kcal</h6>
+                  <h6>£1.00</h6>
+                </div>
+                <div class="quantity-counter">
+                  <img
+                    src="/logo/minus-sign.svg"
+                    alt="Remove from basket"
+                    class="remove_basket_icon"
+                  />
+                  <span>0</span>
+                  <img
+                    src="/logo/plus-sign.svg"
+                    alt="Add to basket"
+                    class="add_basket_icon"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-side-bar">
+            <img src="/logo/favourite.svg" alt="Favourite Meals Logo" />
+            <div class="basket-item-preview">preview</div>
+            <button type="button" id="confirm-order">Add Meal Items to Basket</button>
+            <dialog id="confirm-basket-add">
+              <p>Add Meal to Basket?</p>
               <button type="button">Confirm</button>
               <button type="button">Cancel</button>
             </dialog>
           </div>
+        </div>
+
+        <!-- Order Summary Screen -->
+        <div class="order-summary">
+          <h2>Order Number</h2>
+          <h3 class="order-number">001</h3>
+          <button type="button" class="print-finish">Print Ticket and Finish</button>
         </div>
 
       <!-- end of startpage overlay -->

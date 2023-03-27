@@ -57,6 +57,28 @@ body {
   font-size: 12px;
 }
 
+.spinner {
+  margin: 1rem auto;
+  text-align: center;
+}
+
+.spinner svg {
+  height: 2rem;
+  width: 2rem;
+  fill: var(--secondary-color);
+  animation: rotate 2s infinite linear;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* Media Queries to define size of logo based on screen size */
 
 /* end of startpage overlay */
@@ -171,7 +193,7 @@ body {
 
 /* Modals */
 
-#product-modal, #product-modal2, #product-modal3 {
+#product-modal, #product-modal2, #product-modal3, #product-modal4, .order-summary {
   display: flex;
   background-color: rgba(0, 0, 0, 0.1);
   top: 80px;
@@ -187,7 +209,11 @@ body {
   transition: transform 300ms;
 }
 
-#product-modal.dialog-scale, #product-modal2.dialog-scale, #product-modal3.dialog-scale{
+#product-modal3, #product-modal4, .order-summary /*Basket Favourite Meals Order Summary Modals*/ {
+  width: 100%;
+}
+
+#product-modal.dialog-scale, #product-modal2.dialog-scale, #product-modal3.dialog-scale, #product-modal4.dialog-scale, .order-summary.dialog-scale {
   visibility: visible;
   transform: scale(1);
 }
@@ -237,6 +263,15 @@ body {
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(50px, auto);
   /* border: 1px solid black; */
+}
+
+/* Shopping Basket Product Line */
+.product-modal3 .product-line, .product-modal4 .product-line {
+  flex-basis: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(50px, auto);
+  border: 1px solid black;
 }
 
 .product-line img.remove_basket_icon,
