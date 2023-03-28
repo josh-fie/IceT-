@@ -25,6 +25,7 @@ const orderSummary = document.querySelector(".order-summary");
 const mainContainer = document.querySelector('.main-container');
 const closeModalXButtons = document.querySelectorAll('.close-icon-x');
 const orderCompletion = document.getElementById("confirm-order-completion");
+const productContainer = document.querySelector(".product-container");
 
 const state = {
   preview: [],
@@ -47,9 +48,34 @@ const renderSpinner = (element) => {
   element.insertAdjacentHTML('afterend', markup);
 };
 
-// const generateProducts = (products) => {
-//   products.forEach()
-// }
+const generateProducts = (products) => {
+
+  products.forEach( function (object, index, arr) {
+    const markup = 
+    `<div class="product-line" data-id="${object.id}">
+        <img src=${object.img} alt=${object.alt} />
+        <div>
+          <h3>${object.icecream || object.tea} ${Object.hasOwn(object, 'icecream')? "Cone" : "Tea"}</h3>
+          <h6>Calories: ${object.calories}kcal</h6>
+          <h6>£${object.price}</h6>
+        </div>
+        <div class="quantity-counter">
+          <img
+            src="/logo/minus-sign.svg"
+            alt="Remove from basket"
+            class="remove_basket_icon"
+          />
+          <span>0</span>
+          <img
+            src="/logo/plus-sign.svg"
+            alt="Add to basket"
+            class="add_basket_icon"
+          />
+        </div>
+      </div>`
+
+    productContainer.insertAdjacentHTML('afterbegin', markup);
+  })};
 
 // Start Page Overlay
 
@@ -57,7 +83,6 @@ startpageButton.addEventListener("click", (e) => {
 
 // RenderSpinner function
 const target = e.target;
-console.log(target);
 renderSpinner(target);
 
 // Fetch Favourite Meals from localStorage and store in state.favourites
@@ -89,7 +114,6 @@ state.orderNumber = 1;
 
 // Hide Start Overlay
   const targetoverlay = e.target.closest(".showcase_overlay");
-  console.log(targetoverlay);
 
   setTimeout(() => {
     targetoverlay.style.display = "none";
@@ -102,8 +126,6 @@ state.orderNumber = 1;
   //Remove Spinner
   // const spinner = document.querySelector(".spinner");
   // spinner.remove();
-
-  console.log(state);
 });
 
 //Ice Cream Card Clicked
@@ -114,7 +136,7 @@ icecreamButton.addEventListener("click", (e) => {
   productModal.classList.add("dialog-scale")
 
   // Generate the HTML for the Ice Creams
-  // generateProducts(iceCreams);
+  generateProducts(iceCreams);
 });
 
 //Tea Card Clicked
@@ -123,7 +145,10 @@ teaButton.addEventListener("click", (e) => {
   mainContainer.style.display = "none";
   console.log(teaButton);
 
-  productModal2.classList.add("dialog-scale")
+  productModal2.classList.add("dialog-scale");
+
+  // Generate the HTML for the Teas
+  generateProducts(teas);
 });
 
 shoppingBasket.addEventListener("click", (e) => {
@@ -143,13 +168,17 @@ favouriteMeals.addEventListener("click", (e) => {
 // Event Listener for X Button in Modal for Products
 
 closeModalXButtons.forEach(function(btn) { btn.addEventListener("click", (e) => {
-  console.log("button clicked")
   mainContainer.style.display = "block";
 
+  // Remove Modal Visibility
   const modal = e.target.closest('[data-modal]')
   console.log(modal)
 
   modal.classList.remove("dialog-scale")
+
+  // Clear Products HTML
+  const productsbox = modal.querySelector(".product-container");
+  productsbox.innerHTML = '';
 })});
 
 // Show Order Confirmation Dialog - Basket
