@@ -193,7 +193,7 @@ body {
 
 /* Modals */
 
-#product-modal, #product-modal2, #product-modal3, #product-modal4, .order-summary {
+#product-modal, #product-modal3, #product-modal4, .order-summary {
   display: flex;
   background-color: rgba(0, 0, 0, 0.1);
   top: 80px;
@@ -213,7 +213,7 @@ body {
   width: 100%;
 }
 
-#product-modal.dialog-scale, #product-modal2.dialog-scale, #product-modal3.dialog-scale, #product-modal4.dialog-scale, .order-summary.dialog-scale {
+#product-modal.dialog-scale, #product-modal3.dialog-scale, #product-modal4.dialog-scale, .order-summary.dialog-scale {
   visibility: visible;
   transform: scale(1);
 }

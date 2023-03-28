@@ -18,13 +18,14 @@ const confirmBasket = document.querySelector(".confirm-basket")
 const confirmOrder = document.getElementById("confirm-order");
 
 const productModal = document.getElementById("product-modal");
-const productModal2 = document.getElementById("product-modal2");
+// const productModal2 = document.getElementById("product-modal2");
 const productModal3 = document.getElementById("product-modal3");
 const productModal4 = document.getElementById("product-modal4");
 const orderSummary = document.querySelector(".order-summary");
 const mainContainer = document.querySelector('.main-container');
 const closeModalXButtons = document.querySelectorAll('.close-icon-x');
 const orderCompletion = document.getElementById("confirm-order-completion");
+const modalContainer = document.querySelector(".modal-container");
 const productContainer = document.querySelector(".product-container");
 
 const state = {
@@ -47,6 +48,14 @@ const renderSpinner = (element) => {
 
   element.insertAdjacentHTML('afterend', markup);
 };
+
+const generateH2 = (string) => {
+  const header = modalContainer.firstElementChild;
+  console.log(header);
+
+  header.innerHTML = '';
+  header.insertAdjacentHTML('afterbegin', string);
+}
 
 const generateProducts = (products) => {
 
@@ -135,6 +144,9 @@ icecreamButton.addEventListener("click", (e) => {
 
   productModal.classList.add("dialog-scale")
 
+  // Generate H2 in Modal Container (Ice Creams)
+  generateH2('Ice-Creams');
+
   // Generate the HTML for the Ice Creams
   generateProducts(iceCreams);
 });
@@ -145,7 +157,10 @@ teaButton.addEventListener("click", (e) => {
   mainContainer.style.display = "none";
   console.log(teaButton);
 
-  productModal2.classList.add("dialog-scale");
+  productModal.classList.add("dialog-scale");
+
+  // Generate H2 in Modal Container (Teas)
+  generateH2('Teas');
 
   // Generate the HTML for the Teas
   generateProducts(teas);
@@ -177,8 +192,8 @@ closeModalXButtons.forEach(function(btn) { btn.addEventListener("click", (e) => 
   modal.classList.remove("dialog-scale")
 
   // Clear Products HTML
-  const productsbox = modal.querySelector(".product-container");
-  productsbox.innerHTML = '';
+  const productsContainer = modal.querySelector(".product-container");
+  productsContainer.innerHTML = '';
 })});
 
 // Show Order Confirmation Dialog - Basket
