@@ -16,9 +16,10 @@ const shoppingBasket = document.querySelector(".shopping-basket");
 const favouriteMeals = document.querySelector(".favourite-meals");
 const confirmBasket = document.querySelector(".confirm-basket")
 const confirmOrder = document.getElementById("confirm-order");
+const addToBasket = document.querySelector('add_basket_icon');
+const removeFromBasket = document.querySelector('remove_basket_icon');
 
 const productModal = document.getElementById("product-modal");
-// const productModal2 = document.getElementById("product-modal2");
 const productModal3 = document.getElementById("product-modal3");
 const productModal4 = document.getElementById("product-modal4");
 const orderSummary = document.querySelector(".order-summary");
@@ -27,6 +28,7 @@ const closeModalXButtons = document.querySelectorAll('.close-icon-x');
 const orderCompletion = document.getElementById("confirm-order-completion");
 const modalContainer = document.querySelector(".modal-container");
 const productContainer = document.querySelector(".product-container");
+const previewContainer = document.querySelector(".basket-item-preview")
 
 const state = {
   preview: [],
@@ -74,7 +76,7 @@ const generateProducts = (products) => {
             alt="Remove from basket"
             class="remove_basket_icon"
           />
-          <span>0</span>
+          <span class="product-quantity">0</span>
           <img
             src="/logo/plus-sign.svg"
             alt="Add to basket"
@@ -85,6 +87,26 @@ const generateProducts = (products) => {
 
     productContainer.insertAdjacentHTML('afterbegin', markup);
   })};
+
+  const generatePreview = function(preview) {
+    previewContainer.innerHTML = '';
+
+    const uniqueItems = [...new Set(preview)];
+
+    uniqueItems.forEach(function(object, index, arr) { 
+      const markup = `
+          <div>
+            <img src=${object.img} alt=${object.alt} />
+            <div>
+              <h3>${object.icecream || object.tea} x${1}</h3>
+              <h6>£${object.price}</h6>
+            </div>
+          </div>`
+
+        previewContainer.insertAdjacentHTML('afterbegin', markup);
+
+    console.log(preview, uniqueItems);
+      })};
 
 // Start Page Overlay
 
@@ -166,12 +188,72 @@ teaButton.addEventListener("click", (e) => {
   generateProducts(teas);
 });
 
+// +- Basket icon
+
+productContainer.addEventListener("click", (e) => {
+  const clicked = e.target;
+  const clickedClasses = Array.from(clicked.classList);
+
+  let counter = clicked.previousElementSibling || clicked.nextElementSibling;
+  console.log(clicked, clickedClasses, counter);
+  
+  if (clickedClasses[0] === "add_basket_icon") {
+    // Increase Counter
+
+    let digit = +counter.innerText;
+    digit++
+    console.log(digit);
+
+    counter.innerText = String(digit);
+
+    // Add Object to Preview Array
+
+    const productLine = clicked.closest(".product-line");
+    const dataID = +productLine.dataset.id;
+    console.log(productLine, dataID);
+
+    const combinedProductsArray = [...iceCreams, ...teas]
+    const linkedProduct = combinedProductsArray.find(el => el.id === dataID);
+    state.preview.push(linkedProduct);
+
+    // Generate Previews
+    generatePreview(state.preview);
+}
+
+  if (clickedClasses[0] === "remove_basket_icon") {
+    // Decrease Counter
+    let digit = +counter.innerText;
+    digit === 0 ? counter.innerText = String(digit) : counter.innerText = String(--digit);
+    console.log(digit);
+
+    // Remove Object from Preview Array
+
+    const productLine = clicked.closest(".product-line");
+    const dataID = +productLine.dataset.id;
+    console.log(productLine, dataID);
+
+    const filteredMatching = state.preview.filter( el => el.id === dataID)
+    const filteredNotMatching = state.preview.filter(el => el.id !== dataID)
+    filteredMatching.pop();
+    state.preview = [...filteredNotMatching, ...filteredMatching];
+    
+    console.log(state.preview);
+
+    // Generate Previews
+    generatePreview(state.preview);
+  }
+})
+
+// Basket icon Clicked
+
 shoppingBasket.addEventListener("click", (e) => {
   mainContainer.style.display = "none";
   console.log(shoppingBasket);
 
   productModal3.classList.add("dialog-scale")
 });
+
+// Favourite Meals Icon Clicked
 
 favouriteMeals.addEventListener("click", (e) => {
   mainContainer.style.display = "none";
@@ -194,6 +276,12 @@ closeModalXButtons.forEach(function(btn) { btn.addEventListener("click", (e) => 
   // Clear Products HTML
   const productsContainer = modal.querySelector(".product-container");
   productsContainer.innerHTML = '';
+
+  //Empty Preview Array
+  state.preview = [];
+
+  //Empty Preview Container
+  previewContainer.innerHTML = '';
 })});
 
 // Show Order Confirmation Dialog - Basket
