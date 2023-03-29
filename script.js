@@ -22,6 +22,7 @@ const addPreviewToBasket = document.getElementById("add-to-basket");
 const dialogBasketAdd = document.getElementById("dialog-basket-add");
 const confirmBasketAdd = document.getElementById("confirm-basket-add");
 const cancelBasketAdd = document.getElementById("cancel-basket-add");
+const basketCounter = document.getElementById("basket-counter");
 
 const productModal = document.getElementById("product-modal");
 const productModal3 = document.getElementById("product-modal3");
@@ -90,28 +91,54 @@ const generateProducts = (products) => {
       </div>`
 
     productContainer.insertAdjacentHTML('afterbegin', markup);
-  })};
+})};
 
-  const generatePreview = function(preview) {
-    previewContainer.innerHTML = '';
+const generatePreview = function(preview) {
+  previewContainer.innerHTML = '';
 
-    const uniqueItems = [...new Set(preview)];
-    
-    uniqueItems.forEach(function(object, index, arr) { 
-      const markup = `
+  const uniqueItems = [...new Set(preview)];
+  
+  uniqueItems.forEach(function(object, index, arr) { 
+    const markup = `
+        <div>
+          <img src=${object.img} alt=${object.alt} />
           <div>
-            <img src=${object.img} alt=${object.alt} />
-            <div>
-              <h3>${object.icecream || object.tea} x${object.quantity}</h3>
-              <h6>£${object.price}</h6>
-            </div>
-          </div>`
+            <h3>${object.icecream || object.tea} x${object.quantity}</h3>
+            <h6>£${object.price}</h6>
+          </div>
+        </div>`
 
-        previewContainer.insertAdjacentHTML('afterbegin', markup);
+      previewContainer.insertAdjacentHTML('afterbegin', markup);
 
-    console.log(preview, uniqueItems);
-    })
-    };
+  console.log(preview, uniqueItems);
+  })
+};
+
+const closeClearProductModal = function (element) {
+  mainContainer.style.display = "block";
+
+  // Remove Modal Visibility
+  const modal = element.closest('[data-modal]')
+  console.log(modal)
+
+  modal.classList.remove("dialog-scale")
+
+  // Clear Products HTML
+  const productsContainer = modal.querySelector(".product-container");
+  productsContainer.innerHTML = '';
+
+  //Empty Preview Array
+  state.preview = [];
+
+  //Empty Preview Container
+  previewContainer.innerHTML = '';
+};
+
+// Basket Number Overlay
+const updateBasketOverlay = function () {
+  const basketTotal = state.basket.length;
+  basketCounter.innerHTML = String(basketTotal);
+}
 
 // Start Page Overlay
 
@@ -259,29 +286,33 @@ productContainer.addEventListener("click", (e) => {
 
 // Add Preview to Basket within Modal SideBar
 
-addPreviewToBasket.addEventListener('click', () => dialogBasketAdd.showModal() );
+addPreviewToBasket.addEventListener('click', () => {
+  dialogBasketAdd.showModal();
+});
 
+// Confirm Send Items to Basket
 confirmBasketAdd.addEventListener('click', (e) => {
   //Add Preview Array Items to Basket Array
   state.basket.push(state.preview);
   const basketFlat = state.basket.flat();
   state.basket = basketFlat;
-  
-  //Clear Preview Array
-  state.preview = [];
 
-  //Clear Generated Preview
-  generatePreview(state.preview);
+  // Updates # in Basket
+  updateBasketOverlay();
+  
+  // Empty and Close Modal
+  closeClearProductModal(e.target);
 
   //Close Dialog Modal
   dialogBasketAdd.close()
-  console.log(state.basket);
+  console.log(state.basket, state.preview);
+
+
 })
 
-cancelBasketAdd.addEventListener('click', () => dialogBasketAdd.close() );
-
-
-
+cancelBasketAdd.addEventListener('click', function() {
+  dialogBasketAdd.close();
+});
 
 
 // Basket icon Clicked
@@ -305,23 +336,8 @@ favouriteMeals.addEventListener("click", (e) => {
 // Event Listener for X Button in Modal for Products
 
 closeModalXButtons.forEach(function(btn) { btn.addEventListener("click", (e) => {
-  mainContainer.style.display = "block";
-
-  // Remove Modal Visibility
-  const modal = e.target.closest('[data-modal]')
-  console.log(modal)
-
-  modal.classList.remove("dialog-scale")
-
-  // Clear Products HTML
-  const productsContainer = modal.querySelector(".product-container");
-  productsContainer.innerHTML = '';
-
-  //Empty Preview Array
-  state.preview = [];
-
-  //Empty Preview Container
-  previewContainer.innerHTML = '';
+  const element = e.target;
+  closeClearProductModal(element);
 })});
 
 // Show Order Confirmation Dialog - Basket
