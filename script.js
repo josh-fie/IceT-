@@ -18,6 +18,10 @@ const confirmBasket = document.querySelector(".confirm-basket")
 const confirmOrder = document.getElementById("confirm-order");
 const addToBasket = document.querySelector('add_basket_icon');
 const removeFromBasket = document.querySelector('remove_basket_icon');
+const addPreviewToBasket = document.getElementById("add-to-basket");
+const dialogBasketAdd = document.getElementById("dialog-basket-add");
+const confirmBasketAdd = document.getElementById("confirm-basket-add");
+const cancelBasketAdd = document.getElementById("cancel-basket-add");
 
 const productModal = document.getElementById("product-modal");
 const productModal3 = document.getElementById("product-modal3");
@@ -92,13 +96,13 @@ const generateProducts = (products) => {
     previewContainer.innerHTML = '';
 
     const uniqueItems = [...new Set(preview)];
-
+    
     uniqueItems.forEach(function(object, index, arr) { 
       const markup = `
           <div>
             <img src=${object.img} alt=${object.alt} />
             <div>
-              <h3>${object.icecream || object.tea} x${1}</h3>
+              <h3>${object.icecream || object.tea} x${object.quantity}</h3>
               <h6>£${object.price}</h6>
             </div>
           </div>`
@@ -106,7 +110,8 @@ const generateProducts = (products) => {
         previewContainer.insertAdjacentHTML('afterbegin', markup);
 
     console.log(preview, uniqueItems);
-      })};
+    })
+    };
 
 // Start Page Overlay
 
@@ -198,13 +203,17 @@ productContainer.addEventListener("click", (e) => {
   console.log(clicked, clickedClasses, counter);
   
   if (clickedClasses[0] === "add_basket_icon") {
-    // Increase Counter
+    // Conditional if Basket < 10
+    if(state.preview.length < 10 && state.preview.length + state.basket.length < 10) {
 
+    // Increase Counter
     let digit = +counter.innerText;
-    digit++
+    digit++;
     console.log(digit);
 
-    counter.innerText = String(digit);
+    counter.innerText = String(digit)
+
+    // counter.innerText = String(digit);
 
     // Add Object to Preview Array
 
@@ -214,7 +223,10 @@ productContainer.addEventListener("click", (e) => {
 
     const combinedProductsArray = [...iceCreams, ...teas]
     const linkedProduct = combinedProductsArray.find(el => el.id === dataID);
+    linkedProduct.quantity = digit;
     state.preview.push(linkedProduct);
+
+    } else {alert("Basket Limit Reached")}
 
     // Generate Previews
     generatePreview(state.preview);
@@ -235,6 +247,7 @@ productContainer.addEventListener("click", (e) => {
     const filteredMatching = state.preview.filter( el => el.id === dataID)
     const filteredNotMatching = state.preview.filter(el => el.id !== dataID)
     filteredMatching.pop();
+    filteredMatching.forEach(obj => obj.quantity = digit);
     state.preview = [...filteredNotMatching, ...filteredMatching];
     
     console.log(state.preview);
@@ -243,6 +256,33 @@ productContainer.addEventListener("click", (e) => {
     generatePreview(state.preview);
   }
 })
+
+// Add Preview to Basket within Modal SideBar
+
+addPreviewToBasket.addEventListener('click', () => dialogBasketAdd.showModal() );
+
+confirmBasketAdd.addEventListener('click', (e) => {
+  //Add Preview Array Items to Basket Array
+  state.basket.push(state.preview);
+  const basketFlat = state.basket.flat();
+  state.basket = basketFlat;
+  
+  //Clear Preview Array
+  state.preview = [];
+
+  //Clear Generated Preview
+  generatePreview(state.preview);
+
+  //Close Dialog Modal
+  dialogBasketAdd.close()
+  console.log(state.basket);
+})
+
+cancelBasketAdd.addEventListener('click', () => dialogBasketAdd.close() );
+
+
+
+
 
 // Basket icon Clicked
 

@@ -6,6 +6,7 @@ const iceCreams = [
     id: 1,
     img: "/img/MintChoc_Ice_cream.png",
     alt: "Mint-Chocolate Ice-cream",
+    quantity: 1,
 }, 
 {
     icecream: "Chocolate",
@@ -14,6 +15,7 @@ const iceCreams = [
     id: 2,
     img: "/img/Chocolate_Ice_cream.png",
     alt: "Chocolate Ice-cream",
+    quantity: 1,
 },
 {
     icecream: "Cookie Dough",
@@ -22,6 +24,7 @@ const iceCreams = [
     id: 3,
     img: "/img/CookieDough_Ice_cream.png",
     alt: "Cookie-Dough Ice-cream",
+    quantity: 1,
 },
 {
     icecream: "Strawberry",
@@ -30,6 +33,7 @@ const iceCreams = [
     id: 4,
     img: "/img/Strawberry_Ice_cream.png",
     alt: "Strawberry Ice-cream",
+    quantity: 1,
 },
 {
     icecream: "Cherry",
@@ -38,6 +42,7 @@ const iceCreams = [
     id: 5,
     img: "/img/Cherry_Ice_cream.png",
     alt: "Cherry Ice-cream",
+    quantity: 1,
 },
 {
     icecream: "Vanilla",
@@ -46,6 +51,7 @@ const iceCreams = [
     id: 6,
     img: "/img/Vanilla_Ice_cream.png",
     alt: "Vanilla Ice-cream",
+    quantity: 1,
 }
 ];
 
@@ -57,6 +63,7 @@ const teas = [
     id: 7,
     img: "/img/Black_Tea_Final.png",
     alt: "Black Tea",
+    quantity: 1,
 },
 {
     tea: "Green",
@@ -65,6 +72,7 @@ const teas = [
     id: 8,
     img: "/img/Green_Tea_Final.png",
     alt: "Green Tea",
+    quantity: 1,
 },
 {
     tea: "Peppermint",
@@ -73,6 +81,7 @@ const teas = [
     id: 9,
     img: "/img/Peppermint_Tea_Final.png",
     alt: "Peppermint Tea",
+    quantity: 1,
 },
 {
     tea: "Hibiscus",
@@ -81,6 +90,7 @@ const teas = [
     id: 10,
     img: "/img/Hibiscus_Tea_Final.png",
     alt: "Hibiscus Tea",
+    quantity: 1,
 },
 {
     tea: "Ginger",
@@ -89,6 +99,7 @@ const teas = [
     id: 11,
     img: "/img/Ginger_Tea_Final.png",
     alt: "Ginger Tea",
+    quantity: 1,
 },
 {
     tea: "Jasmine",
@@ -97,5 +108,6 @@ const teas = [
     id: 12,
     img: "/img/Jasmine_Tea_Final.png",
     alt: "Jasmine Tea",
+    quantity: 1,
 },
 ];
