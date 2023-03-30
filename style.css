@@ -245,6 +245,10 @@ body {
   /* height: 100%; */
 }
 
+.modal-container.basket {
+  width: 60%;
+}
+
 .modal-container .close-icon-x {
   position: absolute;
   right: 5px;
@@ -315,12 +319,16 @@ span {
   /* height: 100%; */
 }
 
+.modal-side-bar.basket{
+  width: 40%;
+}
+
 .modal-side-bar img {
   width: 75%;
 }
 
 .modal-side-bar img + img {
-  width: 30%;
+  width: 20%;
 }
 
 .basket-item-preview {
@@ -333,11 +341,28 @@ span {
   flex-wrap: wrap;
   width: 100%;
 }
-
+/* Basket Table Styling */
+.basket-item-preview table {
+  width: 75%;
+  margin: 20px 0;
+  padding: 10px 0;
+  border-collapse: collapse;
+}
 .basket-item-preview tfoot {
   font-size: 1.5rem;
-  padding: 0 5px;
   width: 100%;
+  background-color: lightgrey;
+  border-top: .25px solid black;
+}
+
+.basket-item-preview th {
+  text-align: left;
+  padding: 5px;
+}
+
+.basket-item-preview td {
+  text-align: right;
+  padding: 5px;
 }
 
 .basket-item-preview > div {
@@ -359,6 +384,47 @@ span {
   padding: 20px;
   border-radius: 5px;
   border: .2px solid var(--secondary-color);
+}
+
+/* Dialogs General Styling*/
+
+dialog[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin: auto;
+  border: .25px solid black;
+  border-radius: 5px;
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+dialog button {
+  font-weight: bold;
+  width: 100px;
+}
+
+dialog button:hover {
+  box-shadow: inset 0px 0px 0px 20px rgba(0, 0, 0, 0.1);
+}
+
+dialog button.confirm-button {
+  background-color: #64a5f5;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+}
+
+dialog button.cancel-button {
+  background-color: lightgrey;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
 }
 
 /* Media Queries */

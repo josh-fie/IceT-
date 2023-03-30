@@ -19,6 +19,7 @@ const confirmOrder = document.getElementById("confirm-order");
 const addToBasket = document.querySelector('add_basket_icon');
 const removeFromBasket = document.querySelector('remove_basket_icon');
 const addPreviewToBasket = document.getElementById("add-to-basket");
+const removeProductBasket = document.querySelectorAll("remove-product-basket")
 const dialogBasketAdd = document.getElementById("dialog-basket-add");
 const confirmBasketAdd = document.getElementById("confirm-basket-add");
 const cancelBasketAdd = document.getElementById("cancel-basket-add");
@@ -153,6 +154,7 @@ const generateBasket = function(basket) {
           <h6>Calories: ${object.calories * object.quantity}kcal</h6>
           <h6>£${(object.price * object.quantity).toFixed(2)}</h6>
         </div>
+        <button type="button" class="remove-product-basket">Remove from Basket</button>
       </div>`
     
   
@@ -373,8 +375,8 @@ shoppingBasket.addEventListener("click", (e) => {
     if(el.classList.contains("dialog-scale")) {
       el.classList.remove("dialog-scale")
       // Clear Products HTML
-  const productsContainer = el.querySelector(".product-container");
-  productsContainer.innerHTML = '';
+    const productsContainer = el.querySelector(".product-container");
+    productsContainer.innerHTML = '';
 
   //Empty Preview Array
   state.preview = [];
@@ -394,15 +396,17 @@ shoppingBasket.addEventListener("click", (e) => {
   generateBasket(state.basket);
 
   // Show £ Totals
-const preVatTotal = state.basket.map(obj => obj.price).reduce(function (acc, cur) { return acc += cur});
-console.log(preVatTotal);
+  if(state.basket.length === 0) return; //guard clause if basket clicked on empty
+ 
+  const preVatTotal = state.basket.map(obj => obj.price).reduce(function (acc, cur) { return acc += cur});
+  console.log(preVatTotal);
 
-const vatAmount = preVatTotal * .20;
+  const vatAmount = preVatTotal * .20;
 
-const basketPreviewContainer = productModal3.querySelector(".basket-item-preview")
-basketPreviewContainer.innerHTML = '';
-basketPreviewContainer.insertAdjacentHTML('afterbegin', 
-`<table>
+  const basketPreviewContainer = productModal3.querySelector(".basket-item-preview")
+  basketPreviewContainer.innerHTML = '';
+  basketPreviewContainer.insertAdjacentHTML('afterbegin', 
+  `<table>
     <tr>
       <th scope="row">Total pre-tax:</th>
       <td>£${preVatTotal.toFixed(2)}</td>
@@ -415,13 +419,9 @@ basketPreviewContainer.insertAdjacentHTML('afterbegin',
       <th scope="row">Total</th>
       <td>£${(preVatTotal + vatAmount).toFixed(2)}</td>
     </tfoot>
-  </table>`
+  </table>`);
 
-// `<span id="total-pre-vat">Total pre-tax: £${preVatTotal}</span>
-// <span id="vat-amount">+ VAT 20%: £${vatAmount}</span>
-// <span id="total_inc_vat">Total inc-tax: £${preVatTotal + vatAmount}</span>`
-)
-
+  console.log(state);
 });
 
 // Favourite Meals Icon Clicked
@@ -439,6 +439,24 @@ closeModalXButtons.forEach(function(btn) { btn.addEventListener("click", (e) => 
   const element = e.target;
   closeClearProductModal(element);
 })});
+
+// Remove Item from Basket
+
+//update basket overlay
+//clear products container before generateBasket happens again
+// error if basket cleared completely?
+
+// productModal3.addEventListener('click', (e) => {
+// const clicked = e.target;
+// const productLine = clicked.closest(".product-line");
+// const dataID = +productLine.dataset.id;
+// console.log(productLine, dataID);
+
+// const filteredBasket = state.basket.filter( el => el.id !== dataID)
+// state.basket = filteredBasket;
+
+// generateBasket(state.basket);
+// })
 
 // Show Order Confirmation Dialog - Basket
 confirmOrder.addEventListener('click', () => {

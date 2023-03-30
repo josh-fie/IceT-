@@ -90,15 +90,17 @@
             <button type="button" id="add-to-basket">Add to Basket</button>
             <dialog id="dialog-basket-add">
               <p>Add items to your basket and close window? Your quantities will be reset.</p>
-              <button type="button" id="confirm-basket-add">Confirm</button>
-              <button type="button" id="cancel-basket-add">Cancel</button>
+              <div>
+                <button type="button" id="confirm-basket-add" class="confirm-button">Confirm</button>
+                <button type="button" id="cancel-basket-add" class="cancel-button">Cancel</button>
+              </div>
             </dialog>
           </div>
         </div>
 
         <!-- Basket Modal -->
         <div id="product-modal3" data-modal="3">
-          <div class="modal-container">
+          <div class="modal-container basket">
             <h2>Basket</h2>
             <h6>
               Review Order
@@ -108,7 +110,7 @@
               <!-- Generated When Basket Icon Clicked -->
             </div>
           </div>
-          <div class="modal-side-bar">
+          <div class="modal-side-bar basket">
             <img src="/img/IceT_logo_full_startpage.png" alt="IceT ice-creams logo" />
             <img src="/logo/shopping-cart.svg" alt="Basket Logo" />
             <div class="basket-item-preview">
@@ -116,12 +118,19 @@
             </div>
             <button type="button" id="confirm-order">Confirm Order</button>
             <dialog id="confirm-order-completion">
-              <p>Add Order to Favourite Meals?</p>
-              <input type="checkbox" checked>
-              <input type="text" placeholder="Meal Name">
+              <div>
+                <label for="favourite">Add Order to Favourite Meals?</label>
+                <input type="checkbox" name="favourite" checked>
+              </div>
+              <div>
+                <label for="meal-name">Meal Name</label>
+                <input type="text" name="meal-name" placeholder="Meal Name">
+              </div>
+              <div>
               <p>Confirm Order?</p>
-              <button type="button" class="confirm-basket">Confirm</button>
-              <button type="button">Cancel</button>
+              <button type="button" class="confirm-basket confirm-button">Confirm</button>
+              <button type="button" class="cancel-button">Cancel</button>
+              </div>
             </dialog>
           </div>
         </div>
@@ -165,9 +174,11 @@
             <div class="basket-item-preview">preview</div>
             <button type="button" id="confirm-order">Add Meal Items to Basket</button>
             <dialog id="confirm-basket-add">
-              <p>Add Meal to Basket?</p>
-              <button type="button">Confirm</button>
-              <button type="button">Cancel</button>
+                <p>Add Meal to Basket?</p>
+                <div>
+                  <button type="button" class="confirm-button">Confirm</button>
+                  <button type="button" class="cancel-button">Cancel</button>
+                </div>
             </dialog>
           </div>
         </div>
@@ -176,7 +187,8 @@
         <div class="order-summary">
           <h2>Order Number</h2>
           <h3 class="order-number">001</h3>
-          <button type="button" class="print-finish">Print Ticket and Finish</button>
+          <button type="button" class="print-finish">Finish and Print Order Number</button>
+          <button type="button" class="finish">Finish</button>
         </div>
 
       <!-- end of startpage overlay -->
