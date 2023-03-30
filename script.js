@@ -27,6 +27,7 @@ const basketCounter = document.getElementById("basket-counter");
 const productModal = document.getElementById("product-modal");
 const productModal3 = document.getElementById("product-modal3");
 const productModal4 = document.getElementById("product-modal4");
+const allProductModals = document.querySelectorAll("div[data-modal]");
 const orderSummary = document.querySelector(".order-summary");
 const mainContainer = document.querySelector('.main-container');
 const closeModalXButtons = document.querySelectorAll('.close-icon-x');
@@ -34,6 +35,10 @@ const orderCompletion = document.getElementById("confirm-order-completion");
 const modalContainer = document.querySelector(".modal-container");
 const productContainer = document.querySelector(".product-container");
 const previewContainer = document.querySelector(".basket-item-preview")
+
+// const preVatTotal = document.getElementById("total-pre-vat");
+// const incVatTotal = document.getElementById("total-inc-vat");
+// const vatAmount = document.getElementById("vat-amount");
 
 const state = {
   preview: [],
@@ -73,7 +78,7 @@ const generateProducts = (products) => {
         <div>
           <h3>${object.icecream || object.tea} ${Object.hasOwn(object, 'icecream')? "Cone" : "Tea"}</h3>
           <h6>Calories: ${object.calories}kcal</h6>
-          <h6>£${object.price}</h6>
+          <h6>£${(object.price).toFixed(2)}</h6>
         </div>
         <div class="quantity-counter">
           <img
@@ -104,7 +109,7 @@ const generatePreview = function(preview) {
           <img src=${object.img} alt=${object.alt} />
           <div>
             <h3>${object.icecream || object.tea} x${object.quantity}</h3>
-            <h6>£${object.price}</h6>
+            <h6>£${(object.price).toFixed(2)}</h6>
           </div>
         </div>`
 
@@ -112,6 +117,47 @@ const generatePreview = function(preview) {
 
   console.log(preview, uniqueItems);
   })
+};
+
+const generateBasket = function(basket) {
+  const basketProductContainer = productModal3.querySelector(".product-container");
+
+  const basketCounts = basket.reduce(
+    (countobj, curobj) => {
+      // cur > 0 ? (sums.deposits += cur) : (sums.withdrawals += cur);
+      countobj[curobj.id]? countobj[curobj.id] += 1 : countobj[curobj.id] = 1;
+      return countobj;
+    },
+    { }
+  );
+
+  // Loop through basket and set quantity to match basketCounts
+  basket.forEach(function (obj)
+    {
+    obj.quantity = basketCounts[String(obj.id)];
+  })
+
+  console.log(basketCounts, basket);
+
+  // Create set from basket
+  const newBasket = [...new Set(basket)];
+  console.log(newBasket);
+
+  // Generate HTML
+  newBasket.forEach( function (object, index, arr) {
+    const markup = `<div class="product-line" data-id="${object.id}">
+        <img src=${object.img} alt=${object.alt} />
+        <div>
+          <h3>${object.icecream || object.tea} ${Object.hasOwn(object, 'icecream')? "Cone" : "Tea"}</h3>
+          <h3>x ${object.quantity}</h3>
+          <h6>Calories: ${object.calories * object.quantity}kcal</h6>
+          <h6>£${(object.price * object.quantity).toFixed(2)}</h6>
+        </div>
+      </div>`
+    
+  
+  basketProductContainer.insertAdjacentHTML('afterbegin', markup);
+})
 };
 
 const closeClearProductModal = function (element) {
@@ -310,6 +356,8 @@ confirmBasketAdd.addEventListener('click', (e) => {
 
 })
 
+// Cancel Send Items to Basket
+
 cancelBasketAdd.addEventListener('click', function() {
   dialogBasketAdd.close();
 });
@@ -318,10 +366,62 @@ cancelBasketAdd.addEventListener('click', function() {
 // Basket icon Clicked
 
 shoppingBasket.addEventListener("click", (e) => {
-  mainContainer.style.display = "none";
-  console.log(shoppingBasket);
+  // Warning
 
-  productModal3.classList.add("dialog-scale")
+  // Close Any Open Modals
+  allProductModals.forEach(el => {
+    if(el.classList.contains("dialog-scale")) {
+      el.classList.remove("dialog-scale")
+      // Clear Products HTML
+  const productsContainer = el.querySelector(".product-container");
+  productsContainer.innerHTML = '';
+
+  //Empty Preview Array
+  state.preview = [];
+
+  //Empty Preview Container
+  previewContainer.innerHTML = '';
+    }
+  });
+
+  mainContainer.style.display = "none";
+
+  productModal3.classList.add("dialog-scale");
+
+  console.log(state.basket);
+
+  // Generate HTML for Basket Items
+  generateBasket(state.basket);
+
+  // Show £ Totals
+const preVatTotal = state.basket.map(obj => obj.price).reduce(function (acc, cur) { return acc += cur});
+console.log(preVatTotal);
+
+const vatAmount = preVatTotal * .20;
+
+const basketPreviewContainer = productModal3.querySelector(".basket-item-preview")
+basketPreviewContainer.innerHTML = '';
+basketPreviewContainer.insertAdjacentHTML('afterbegin', 
+`<table>
+    <tr>
+      <th scope="row">Total pre-tax:</th>
+      <td>£${preVatTotal.toFixed(2)}</td>
+    </tr>
+    <tr>
+      <th scope="row">+ VAT 20%:</th>
+      <td>£${vatAmount.toFixed(2)}</td>
+    </tr>
+    <tfoot>
+      <th scope="row">Total</th>
+      <td>£${(preVatTotal + vatAmount).toFixed(2)}</td>
+    </tfoot>
+  </table>`
+
+// `<span id="total-pre-vat">Total pre-tax: £${preVatTotal}</span>
+// <span id="vat-amount">+ VAT 20%: £${vatAmount}</span>
+// <span id="total_inc_vat">Total inc-tax: £${preVatTotal + vatAmount}</span>`
+)
+
 });
 
 // Favourite Meals Icon Clicked

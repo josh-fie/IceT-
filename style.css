@@ -315,8 +315,12 @@ span {
   /* height: 100%; */
 }
 
-.modal-side-bar img[src="/img/IceT_logo_full_startpage.png"] {
+.modal-side-bar img {
   width: 75%;
+}
+
+.modal-side-bar img + img {
+  width: 30%;
 }
 
 .basket-item-preview {
@@ -327,6 +331,12 @@ span {
   justify-content: space-between;
   padding: 0 5px;
   flex-wrap: wrap;
+  width: 100%;
+}
+
+.basket-item-preview tfoot {
+  font-size: 1.5rem;
+  padding: 0 5px;
   width: 100%;
 }
 
