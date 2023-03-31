@@ -205,8 +205,8 @@ body {
   left: 0;
   margin: auto;
   position: fixed;
-  /* height: 90vh; */
-  overflow: auto;
+  height: 90vh;
+  overflow: scroll;
   padding: 1rem;
   border: none;
   visibility: hidden;
@@ -256,10 +256,20 @@ body {
 }
 
 .product-container {
+  margin-top: 10px;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   height: 100%;
+}
+
+.modal-container.basket .product-container{
+  height: 50vh;
+  justify-content: flex-start;
+}
+
+.modal-container.basket .product-container img{
+  width: 50%;
 }
 
 .product-container img {
@@ -272,6 +282,23 @@ body {
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(50px, auto);
   /* border: 1px solid black; */
+}
+
+.modal-container.basket .product-container .product-line {
+  font-size: .8rem;
+  flex-basis: 90%;
+  height: 20%;
+  grid-template-columns: 20% 60% 20%;
+}
+
+.modal-container.basket .product-container .product-line button {
+  background-color: #fa4545;
+  color: #fff;
+  /* padding: 5px 10px; */
+  border: none;
+  border-radius: 5px;
+  width: 75%;
+  height: 75%
 }
 
 /* Shopping Basket Product Line */

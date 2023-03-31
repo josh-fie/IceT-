@@ -37,6 +37,8 @@ const modalContainer = document.querySelector(".modal-container");
 const productContainer = document.querySelector(".product-container");
 const previewContainer = document.querySelector(".basket-item-preview")
 
+const basketProductContainer = productModal3.querySelector(".product-container");
+
 // const preVatTotal = document.getElementById("total-pre-vat");
 // const incVatTotal = document.getElementById("total-inc-vat");
 // const vatAmount = document.getElementById("vat-amount");
@@ -121,11 +123,10 @@ const generatePreview = function(preview) {
 };
 
 const generateBasket = function(basket) {
-  const basketProductContainer = productModal3.querySelector(".product-container");
+  basketProductContainer.innerHTML = '';
 
   const basketCounts = basket.reduce(
     (countobj, curobj) => {
-      // cur > 0 ? (sums.deposits += cur) : (sums.withdrawals += cur);
       countobj[curobj.id]? countobj[curobj.id] += 1 : countobj[curobj.id] = 1;
       return countobj;
     },
@@ -154,13 +155,41 @@ const generateBasket = function(basket) {
           <h6>Calories: ${object.calories * object.quantity}kcal</h6>
           <h6>£${(object.price * object.quantity).toFixed(2)}</h6>
         </div>
-        <button type="button" class="remove-product-basket">Remove from Basket</button>
+        <button type="button" class="remove-product-basket">Remove</button>
       </div>`
     
   
   basketProductContainer.insertAdjacentHTML('afterbegin', markup);
 })
 };
+
+const generateBasketTotals = function () {
+  const basketPreviewContainer = productModal3.querySelector(".basket-item-preview")
+  basketPreviewContainer.innerHTML = '';
+
+  if(state.basket.length === 0) return; //guard clause if basket clicked on empty
+ 
+  const preVatTotal = state.basket.map(obj => obj.price).reduce(function (acc, cur) { return acc += cur});
+  console.log(preVatTotal);
+
+  const vatAmount = preVatTotal * .20;
+
+  basketPreviewContainer.insertAdjacentHTML('afterbegin', 
+  `<table>
+    <tr>
+      <th scope="row">Total pre-tax:</th>
+      <td>£${preVatTotal.toFixed(2)}</td>
+    </tr>
+    <tr>
+      <th scope="row">+ VAT 20%:</th>
+      <td>£${vatAmount.toFixed(2)}</td>
+    </tr>
+    <tfoot>
+      <th scope="row">Total</th>
+      <td>£${(preVatTotal + vatAmount).toFixed(2)}</td>
+    </tfoot>
+  </table>`);
+}
 
 const closeClearProductModal = function (element) {
   mainContainer.style.display = "block";
@@ -305,7 +334,7 @@ productContainer.addEventListener("click", (e) => {
 
     // Generate Previews
     generatePreview(state.preview);
-}
+  }
 
   if (clickedClasses[0] === "remove_basket_icon") {
     // Decrease Counter
@@ -396,30 +425,7 @@ shoppingBasket.addEventListener("click", (e) => {
   generateBasket(state.basket);
 
   // Show £ Totals
-  if(state.basket.length === 0) return; //guard clause if basket clicked on empty
- 
-  const preVatTotal = state.basket.map(obj => obj.price).reduce(function (acc, cur) { return acc += cur});
-  console.log(preVatTotal);
-
-  const vatAmount = preVatTotal * .20;
-
-  const basketPreviewContainer = productModal3.querySelector(".basket-item-preview")
-  basketPreviewContainer.innerHTML = '';
-  basketPreviewContainer.insertAdjacentHTML('afterbegin', 
-  `<table>
-    <tr>
-      <th scope="row">Total pre-tax:</th>
-      <td>£${preVatTotal.toFixed(2)}</td>
-    </tr>
-    <tr>
-      <th scope="row">+ VAT 20%:</th>
-      <td>£${vatAmount.toFixed(2)}</td>
-    </tr>
-    <tfoot>
-      <th scope="row">Total</th>
-      <td>£${(preVatTotal + vatAmount).toFixed(2)}</td>
-    </tfoot>
-  </table>`);
+  generateBasketTotals();
 
   console.log(state);
 });
@@ -442,21 +448,28 @@ closeModalXButtons.forEach(function(btn) { btn.addEventListener("click", (e) => 
 
 // Remove Item from Basket
 
-//update basket overlay
-//clear products container before generateBasket happens again
-// error if basket cleared completely?
+basketProductContainer.addEventListener('click', (e) => {
+const clicked = e.target;
+console.log(clicked);
 
-// productModal3.addEventListener('click', (e) => {
-// const clicked = e.target;
-// const productLine = clicked.closest(".product-line");
-// const dataID = +productLine.dataset.id;
-// console.log(productLine, dataID);
+const clickedClasses = Array.from(clicked.classList);
 
-// const filteredBasket = state.basket.filter( el => el.id !== dataID)
-// state.basket = filteredBasket;
+  
+if (clickedClasses[0] !== "remove-product-basket") return; //guard clause
 
-// generateBasket(state.basket);
-// })
+const productLine = clicked.closest(".product-line");
+const dataID = +productLine.dataset.id;
+console.log(productLine, dataID);
+
+const filteredBasket = state.basket.filter( el => el.id !== dataID)
+state.basket = filteredBasket;
+
+generateBasket(state.basket);
+
+generateBasketTotals();
+
+updateBasketOverlay();
+})
 
 // Show Order Confirmation Dialog - Basket
 confirmOrder.addEventListener('click', () => {
