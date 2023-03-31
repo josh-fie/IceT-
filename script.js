@@ -1,12 +1,5 @@
 "use strict";
 
-//Keydown Template (Escape)
-// document.addEventListener('keydown', function (e) {
-//   if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-//     closeModal();
-//   }
-// });
-
 /* Start Page Overlay */
 
 const startpageButton = document.querySelector("#start_button");
@@ -45,11 +38,10 @@ const basketProductContainer = productModal3.querySelector(".product-container")
 
 const state = {
   preview: [],
-  previewPage: 0,
   basket: [],
   basketLimit: 10,
-  favourites: [],
-  orderNumber: 1,
+  favourites: [[{},{},{}, "test"]],
+  orderNumber: 0,
 };
 
 const renderSpinner = (element) => {
@@ -66,7 +58,6 @@ const renderSpinner = (element) => {
 
 const generateH2 = (string) => {
   const header = modalContainer.firstElementChild;
-  console.log(header);
 
   header.innerHTML = '';
   header.insertAdjacentHTML('afterbegin', string);
@@ -118,7 +109,6 @@ const generatePreview = function(preview) {
 
       previewContainer.insertAdjacentHTML('afterbegin', markup);
 
-  console.log(preview, uniqueItems);
   })
 };
 
@@ -139,11 +129,9 @@ const generateBasket = function(basket) {
     obj.quantity = basketCounts[String(obj.id)];
   })
 
-  console.log(basketCounts, basket);
-
   // Create set from basket
   const newBasket = [...new Set(basket)];
-  console.log(newBasket);
+  console.log(basket, newBasket);
 
   // Generate HTML
   newBasket.forEach( function (object, index, arr) {
@@ -170,7 +158,6 @@ const generateBasketTotals = function () {
   if(state.basket.length === 0) return; //guard clause if basket clicked on empty
  
   const preVatTotal = state.basket.map(obj => obj.price).reduce(function (acc, cur) { return acc += cur});
-  console.log(preVatTotal);
 
   const vatAmount = preVatTotal * .20;
 
@@ -196,7 +183,6 @@ const closeClearProductModal = function (element) {
 
   // Remove Modal Visibility
   const modal = element.closest('[data-modal]')
-  console.log(modal)
 
   modal.classList.remove("dialog-scale")
 
@@ -226,7 +212,7 @@ const target = e.target;
 renderSpinner(target);
 
 // Fetch Favourite Meals from localStorage and store in state.favourites
-state.favourites = [];
+// state.favourites = [];
 
 // _setLocalStorage() {
 //   localStorage.setItem('workouts', JSON.stringify(this.#workouts));
@@ -250,7 +236,6 @@ state.favourites = [];
 // }
 
 // Store Order Number value from localStorage into state.orderNumber
-state.orderNumber = 1;
 
 // Hide Start Overlay
   const targetoverlay = e.target.closest(".showcase_overlay");
@@ -286,7 +271,6 @@ icecreamButton.addEventListener("click", (e) => {
 
 teaButton.addEventListener("click", (e) => {
   mainContainer.style.display = "none";
-  console.log(teaButton);
 
   productModal.classList.add("dialog-scale");
 
@@ -304,7 +288,6 @@ productContainer.addEventListener("click", (e) => {
   const clickedClasses = Array.from(clicked.classList);
 
   let counter = clicked.previousElementSibling || clicked.nextElementSibling;
-  console.log(clicked, clickedClasses, counter);
   
   if (clickedClasses[0] === "add_basket_icon") {
     // Conditional if Basket < 10
@@ -313,7 +296,6 @@ productContainer.addEventListener("click", (e) => {
     // Increase Counter
     let digit = +counter.innerText;
     digit++;
-    console.log(digit);
 
     counter.innerText = String(digit)
 
@@ -323,7 +305,6 @@ productContainer.addEventListener("click", (e) => {
 
     const productLine = clicked.closest(".product-line");
     const dataID = +productLine.dataset.id;
-    console.log(productLine, dataID);
 
     const combinedProductsArray = [...iceCreams, ...teas]
     const linkedProduct = combinedProductsArray.find(el => el.id === dataID);
@@ -331,6 +312,8 @@ productContainer.addEventListener("click", (e) => {
     state.preview.push(linkedProduct);
 
     } else {alert("Basket Limit Reached")}
+
+    console.log(state.preview);
 
     // Generate Previews
     generatePreview(state.preview);
@@ -340,13 +323,11 @@ productContainer.addEventListener("click", (e) => {
     // Decrease Counter
     let digit = +counter.innerText;
     digit === 0 ? counter.innerText = String(digit) : counter.innerText = String(--digit);
-    console.log(digit);
 
     // Remove Object from Preview Array
 
     const productLine = clicked.closest(".product-line");
     const dataID = +productLine.dataset.id;
-    console.log(productLine, dataID);
 
     const filteredMatching = state.preview.filter( el => el.id === dataID)
     const filteredNotMatching = state.preview.filter(el => el.id !== dataID)
@@ -382,7 +363,6 @@ confirmBasketAdd.addEventListener('click', (e) => {
 
   //Close Dialog Modal
   dialogBasketAdd.close()
-  console.log(state.basket, state.preview);
 
 
 })
@@ -427,7 +407,7 @@ shoppingBasket.addEventListener("click", (e) => {
   // Show £ Totals
   generateBasketTotals();
 
-  console.log(state);
+  console.log("After Basket generated:", state);
 });
 
 // Favourite Meals Icon Clicked
@@ -450,7 +430,6 @@ closeModalXButtons.forEach(function(btn) { btn.addEventListener("click", (e) => 
 
 basketProductContainer.addEventListener('click', (e) => {
 const clicked = e.target;
-console.log(clicked);
 
 const clickedClasses = Array.from(clicked.classList);
 
@@ -459,7 +438,6 @@ if (clickedClasses[0] !== "remove-product-basket") return; //guard clause
 
 const productLine = clicked.closest(".product-line");
 const dataID = +productLine.dataset.id;
-console.log(productLine, dataID);
 
 const filteredBasket = state.basket.filter( el => el.id !== dataID)
 state.basket = filteredBasket;
@@ -473,11 +451,66 @@ updateBasketOverlay();
 
 // Show Order Confirmation Dialog - Basket
 confirmOrder.addEventListener('click', () => {
+
+  if(state.basket.length === 0) return; //guard clause
+
   orderCompletion.showModal();
 })
 
 // Order Summary Show upon Basket Confirmation
-confirmBasket.addEventListener('click', () => {
+confirmBasket.addEventListener('click', (e) => {
+
+  //Validation of Inputs
+  const dialogCommit = orderCompletion.children;
+  console.log(dialogCommit);
+  const checkedValue = dialogCommit[0].children.favourite.checked;
+  const mealNameValue = dialogCommit[1].children.mealname.value;
+  console.log(checkedValue, mealNameValue);
+
+  let storedMealNames;
+  state.favourites.length > 0 ? storedMealNames = state.favourites.map(arr => arr[arr.length-1]) : storedMealNames = [];
+  console.log(storedMealNames);
+
+  if(storedMealNames.includes(mealNameValue)) {
+    return alert("Meal Name already exists"); //guard clause to produce alert
+  }
+  
+  orderCompletion.returnValue = "Confirm";
+
+  // if favourite input checked? 
+  if(orderCompletion.returnValue === "Confirm" && checkedValue) {
+
+    state.favourites.push(state.basket);
+
+    state.favourites[state.favourites.length-1].push(mealNameValue);
+  }
+
+  //Empty Basket
+  state.basket = [];
+
+  // Close Dialog Window
+  orderCompletion.close();
+
+  // Increase Order Number
+  state.orderNumber++
+
+  // Basket Overlay = 0
+  updateBasketOverlay()
+
   productModal3.classList.remove("dialog-scale");
   orderSummary.classList.add("dialog-scale");
+
+  //generate HTML for orderSummary including state.orderNumber.
+
+  console.log(state);
 } )
+
+//Finish Button Clicked
+
+  // store state in localStorage
+    // favourites
+    // orderNumber
+
+  // store 
+
+// Finish Button Clicked with Print

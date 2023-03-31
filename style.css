@@ -438,7 +438,7 @@ dialog button:hover {
   box-shadow: inset 0px 0px 0px 20px rgba(0, 0, 0, 0.1);
 }
 
-dialog button.confirm-button {
+dialog .confirm-button {
   background-color: #64a5f5;
   color: #fff;
   padding: 10px 20px;
