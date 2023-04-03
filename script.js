@@ -20,6 +20,7 @@ const dialogBasketAdd = document.getElementById("dialog-basket-add");
 const confirmBasketAdd = document.getElementById("confirm-basket-add");
 const cancelBasketAdd = document.getElementById("cancel-basket-add");
 const basketCounter = document.getElementById("basket-counter");
+const favouriteCounter = document.getElementById("favourite-counter");
 const favouriteCheckbox = document.querySelector("input[name=favourite]");
 const mealNameDiv = document.querySelector(".meal-name");
 const orderNumber = document.querySelector(".order-number");
@@ -237,6 +238,12 @@ const updateBasketOverlay = function () {
   basketCounter.innerHTML = String(basketTotal);
 }
 
+//Favourites Number Overlay
+const updateFavouritesOverlay = function () {
+  const favouriteTotal = state.favourites.length;
+  favouriteCounter.innerHTML = String(favouriteTotal);
+}
+
 // Start Page Overlay
 
 startpageButton.addEventListener("click", (e) => {
@@ -262,26 +269,22 @@ startpageButton.addEventListener("click", (e) => {
     if(orderNumber) {
       state.orderNumber = orderNumber;
     }
-
-    console.log(state);
   };
 
   getLocalStorage();
 
-  // Store Order Number value from localStorage into state.orderNumber
+  // Updates Favourites Overlay
+  updateFavouritesOverlay();
+
+  console.log(state);
 
   // Hide Start Overlay
 
-  setTimeout(() => {
-    showcaseOverlay.style.display = "none";
+  showcaseOverlay.style.display = "none";
 
-    const spinner = document.querySelector(".spinner");
-    spinner.remove();
-  }, 1000);
-
-  //Remove Spinner
-  // const spinner = document.querySelector(".spinner");
-  // spinner.remove();
+  // Remove Spinner from DOM
+  const spinner = document.querySelector(".spinner");
+  spinner.remove();
 });
 
 //Ice Cream Card Clicked
@@ -444,6 +447,43 @@ shoppingBasket.addEventListener("click", (e) => {
 // Favourite Meals Icon Clicked
 
 favouriteMeals.addEventListener("click", (e) => {
+
+  // Close all other open modals - same as when basket opened
+
+  // Generate Meals from Favourites array
+    //Generate Meal Div and Meal Header and Contents for each index in favourites
+    //Then for each meal need secondary html generation for each item within the meal - following similar similar quantity numeration as per generateBasket
+    //For each Meal need to account for number already in basket as !> 10 in basket with meal items added
+    //If Add Meal to Basket clicked then close modal and update Basket overlay and add items to state.basket.
+
+    // markup = 
+    // `<div> <!-- Meal Div-->
+    //     <div><!--Meal Header -->
+    //       <h2>Meal Name 1</h2>
+    //       <div>£All Meal Items: ${(preVatTotal).toFixed(2)}</div>
+    //       <button type="button" id="confirm-order">Add Meal Items to Basket</button>
+    //         <dialog id="confirm-basket-add">
+    //             <p>Add Meal to Basket?</p>
+    //             <div>
+    //               <button type="button" class="confirm-button">Confirm</button>
+    //               <button type="button" class="cancel-button">Cancel</button>
+    //             </div>
+    //         </dialog>
+    //     </div>
+    //     <div><!--Products in Meal Div--></div>
+    //       <div class="product-line" data-id="${object.id}">
+    //         <img/>
+    //         <div>
+    //           <h3>${object.icecream || object.tea} ${Object.hasOwn(object, 'icecream')? "Cone" : "Tea"}</h3>
+    //           <h3>x ${object.quantity}</h3>
+    //           <h6>Calories: ${object.calories * object.quantity}kcal</h6>
+    //           <h6>£${(object.price * object.quantity).toFixed(2)}</h6>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>`
+
+
   mainContainer.style.display = "none";
   console.log(favouriteMeals);
 
@@ -563,6 +603,8 @@ setLocalStorage();
 state.favourites = [];
 
 showcaseOverlay.style.display = "flex";
+
+updateFavouritesOverlay();
 
 orderSummary.classList.remove("dialog-scale");
 

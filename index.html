@@ -145,43 +145,33 @@
             </h6>
             <button type="button" class="close-icon-x">X</button>
             <div class="product-container">
-              <div class="product-line">
-                <img src="/img/Black_Tea_Final.png" alt="Black Tea with Milk" />
-                <div>
-                  <h3>Black Tea</h3>
-                  <h6>Calories: 4kcal</h6>
-                  <h6>£1.00</h6>
+              <div> <!-- Meal Div-->
+                <div><!--Meal Header -->
+                  <h2>Meal Name 1</h2>
+                  <div>£All Meal Items: ${(preVatTotal).toFixed(2)}</div>
+                  <button type="button" id="confirm-order">Add Meal Items to Basket</button>
+                    <dialog id="confirm-basket-add">
+                        <p>Add Meal to Basket?</p>
+                        <div>
+                          <button type="button" class="confirm-button">Confirm</button>
+                          <button type="button" class="cancel-button">Cancel</button>
+                        </div>
+                    </dialog>
                 </div>
-                <div class="quantity-counter">
-                  <img
-                    src="/logo/minus-sign.svg"
-                    alt="Remove from basket"
-                    class="remove_basket_icon"
-                  />
-                  <span>0</span>
-                  <img
-                    src="/logo/plus-sign.svg"
-                    alt="Add to basket"
-                    class="add_basket_icon"
-                  />
+                <div><!--Products in Meal Div--></div>
+                  <div class="product-line" data-id="${object.id}">
+                    <img/>
+                    <div>
+                      <h3>${object.icecream || object.tea} ${Object.hasOwn(object, 'icecream')? "Cone" : "Tea"}</h3>
+                      <h3>x ${object.quantity}</h3>
+                      <h6>Calories: ${object.calories * object.quantity}kcal</h6>
+                      <h6>£${(object.price * object.quantity).toFixed(2)}</h6>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="modal-side-bar">
-            <img src="/img/IceT_logo_full_startpage.png" alt="IceT ice-creams logo" />
-            <img src="/logo/favourite.svg" alt="Favourite Meals Logo" />
-            <div class="basket-item-preview">preview</div>
-            <button type="button" id="confirm-order">Add Meal Items to Basket</button>
-            <dialog id="confirm-basket-add">
-                <p>Add Meal to Basket?</p>
-                <div>
-                  <button type="button" class="confirm-button">Confirm</button>
-                  <button type="button" class="cancel-button">Cancel</button>
-                </div>
-            </dialog>
-          </div>
-        </div>
 
         <!-- Order Summary Screen -->
         <div class="order-summary">
