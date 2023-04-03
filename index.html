@@ -118,18 +118,18 @@
             </div>
             <button type="button" id="confirm-order">Confirm Order</button>
               <dialog id="confirm-order-completion">
-                  <div>
+                  <div class="toggler">
                     <label for="favourite">Add Order to Favourite Meals?</label>
-                    <input type="checkbox" name="favourite" checked>
+                    <input type="checkbox" name="favourite">
                   </div>
-                  <div>
+                  <div class="meal-name">
                     <label for="meal-name">Meal Name</label>
                     <input type="text" name="mealname" placeholder="Meal Name">
                   </div>
                   <div>
                   <p>Confirm Order?</p>
                   <input type="button" class="confirm-basket confirm-button" value="Confirm">Confirm</button>
-                  <button type="button" class="cancel-button" value="cancel">Cancel</button>
+                  <button type="button" class="cancel-basket cancel-button" value="cancel">Cancel</button>
                   </div>
               </dialog>
           </div>
@@ -186,9 +186,11 @@
         <!-- Order Summary Screen -->
         <div class="order-summary">
           <h2>Order Number</h2>
-          <h3 class="order-number">001</h3>
-          <button type="button" class="print-finish">Finish and Print Order Number</button>
-          <button type="button" class="finish">Finish</button>
+          <h3 class="order-number"><!-- Generated --></h3>
+          <div>
+            <button type="button" class="print-finish">Finish and Print Order Number</button>
+            <button type="button" class="finish">Finish</button>
+          </div>
         </div>
 
       <!-- end of startpage overlay -->

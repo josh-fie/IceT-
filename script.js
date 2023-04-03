@@ -1,5 +1,7 @@
 "use strict";
 
+const container = document.querySelector(".container");
+
 /* Start Page Overlay */
 
 const startpageButton = document.querySelector("#start_button");
@@ -7,7 +9,8 @@ const icecreamButton = document.querySelector(".ice-cream-card");
 const teaButton = document.querySelector(".tea-card");
 const shoppingBasket = document.querySelector(".shopping-basket");
 const favouriteMeals = document.querySelector(".favourite-meals");
-const confirmBasket = document.querySelector(".confirm-basket")
+const confirmBasket = document.querySelector(".confirm-basket");
+const cancelBasket = document.querySelector(".cancel-basket");
 const confirmOrder = document.getElementById("confirm-order");
 const addToBasket = document.querySelector('add_basket_icon');
 const removeFromBasket = document.querySelector('remove_basket_icon');
@@ -17,6 +20,9 @@ const dialogBasketAdd = document.getElementById("dialog-basket-add");
 const confirmBasketAdd = document.getElementById("confirm-basket-add");
 const cancelBasketAdd = document.getElementById("cancel-basket-add");
 const basketCounter = document.getElementById("basket-counter");
+const favouriteCheckbox = document.querySelector("input[name=favourite]");
+const mealNameDiv = document.querySelector(".meal-name");
+const orderNumber = document.querySelector(".order-number");
 
 const productModal = document.getElementById("product-modal");
 const productModal3 = document.getElementById("product-modal3");
@@ -43,6 +49,26 @@ const state = {
   favourites: [[{},{},{}, "test"]],
   orderNumber: 0,
 };
+
+const renderError = (error, domElement = mainContainer) => {
+  //create new div
+  const errorDiv = document.createElement("div");
+
+  errorDiv.className = "_error";
+
+  // and give it some content
+  const errorMessage = document.createTextNode(` ${error}`);
+
+  errorDiv.appendChild(errorMessage);
+
+  //insert into DOM
+  domElement.before(errorDiv);
+
+  //setTimeout to delete Node from DOM after 3 seconds
+  setTimeout(() => {
+    errorDiv.remove();
+  }, 5000);
+}
 
 const renderSpinner = (element) => {
   const markup = `
@@ -311,7 +337,7 @@ productContainer.addEventListener("click", (e) => {
     linkedProduct.quantity = digit;
     state.preview.push(linkedProduct);
 
-    } else {alert("Basket Limit Reached")}
+    } else {renderError("Basket Limit Reached")}
 
     console.log(state.preview);
 
@@ -457,6 +483,17 @@ confirmOrder.addEventListener('click', () => {
   orderCompletion.showModal();
 })
 
+// Favourite Meal not Checked
+favouriteCheckbox.addEventListener('change', function() {
+  if (this.checked) {
+    console.log("Checkbox is checked..");
+    mealNameDiv.style.display = "block";
+  } else {
+    console.log("Checkbox is not checked..");
+    mealNameDiv.style.display = "none";
+  }
+});
+
 // Order Summary Show upon Basket Confirmation
 confirmBasket.addEventListener('click', (e) => {
 
@@ -471,8 +508,12 @@ confirmBasket.addEventListener('click', (e) => {
   state.favourites.length > 0 ? storedMealNames = state.favourites.map(arr => arr[arr.length-1]) : storedMealNames = [];
   console.log(storedMealNames);
 
-  if(storedMealNames.includes(mealNameValue)) {
-    return alert("Meal Name already exists"); //guard clause to produce alert
+  if(checkedValue && storedMealNames.includes(mealNameValue)) {
+    return renderError("Meal Name Unavailable", favouriteCheckbox); //guard clause to produce alert
+  }
+
+  if(checkedValue && mealNameValue === '') {
+    return renderError("Meal Name Required", favouriteCheckbox); //guard clause to produce alert
   }
   
   orderCompletion.returnValue = "Confirm";
@@ -501,9 +542,12 @@ confirmBasket.addEventListener('click', (e) => {
   orderSummary.classList.add("dialog-scale");
 
   //generate HTML for orderSummary including state.orderNumber.
+  orderNumber.innerText = String(state.orderNumber);
 
   console.log(state);
 } )
+
+cancelBasket.addEventListener('click', function(e) {orderCompletion.close()});
 
 //Finish Button Clicked
 
