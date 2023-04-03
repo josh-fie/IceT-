@@ -23,7 +23,10 @@ const basketCounter = document.getElementById("basket-counter");
 const favouriteCheckbox = document.querySelector("input[name=favourite]");
 const mealNameDiv = document.querySelector(".meal-name");
 const orderNumber = document.querySelector(".order-number");
+const finishOrder = document.querySelector(".finish");
+const orderPrint = document.querySelector(".print-order-number");
 
+const showcaseOverlay = document.querySelector(".showcase_overlay");
 const productModal = document.getElementById("product-modal");
 const productModal3 = document.getElementById("product-modal3");
 const productModal4 = document.getElementById("product-modal4");
@@ -48,6 +51,11 @@ const state = {
   basketLimit: 10,
   favourites: [[{},{},{}, "test"]],
   orderNumber: 0,
+};
+
+const setLocalStorage = function() {
+  localStorage.setItem('favourites', JSON.stringify(state.favourites));
+  localStorage.setItem('orderNumber', JSON.stringify(state.orderNumber));
 };
 
 const renderError = (error, domElement = mainContainer) => {
@@ -233,46 +241,43 @@ const updateBasketOverlay = function () {
 
 startpageButton.addEventListener("click", (e) => {
 
-// RenderSpinner function
-const target = e.target;
-renderSpinner(target);
+  // RenderSpinner function
+  const target = e.target;
+  renderSpinner(target);
 
-// Fetch Favourite Meals from localStorage and store in state.favourites
-// state.favourites = [];
+  //Retrieve LocalStorage Favourites and Order Number
+  const getLocalStorage = () => {
+    const favourites = JSON.parse(localStorage.getItem('favourites'));
+    const orderNumber = JSON.parse(localStorage.getItem('orderNumber'));
 
-// _setLocalStorage() {
-//   localStorage.setItem('workouts', JSON.stringify(this.#workouts));
-// }
+    if (!favourites) {
+      console.log("no favourites")
+      state.favourites = [];
+    }
+    console.log(favourites, orderNumber)
+    if(favourites && orderNumber) {
+      state.favourites = favourites;
+      state.orderNumber = orderNumber;
+    }
+    if(orderNumber) {
+      state.orderNumber = orderNumber;
+    }
 
-// _getLocalStorage() {
-//   const data = JSON.parse(localStorage.getItem('workouts'));
+    console.log(state);
+  };
 
-//   if (!data) return;
+  getLocalStorage();
 
-//   this.#workouts = data;
+  // Store Order Number value from localStorage into state.orderNumber
 
-//   this.#workouts.forEach(work => {
-//     this._renderWorkout(work);
-//   });
-// }
-
-// reset() {
-//   localStorage.removeItem('workouts');
-//   location.reload();
-// }
-
-// Store Order Number value from localStorage into state.orderNumber
-
-// Hide Start Overlay
-  const targetoverlay = e.target.closest(".showcase_overlay");
+  // Hide Start Overlay
 
   setTimeout(() => {
-    targetoverlay.style.display = "none";
+    showcaseOverlay.style.display = "none";
 
     const spinner = document.querySelector(".spinner");
     spinner.remove();
   }, 1000);
-  // targetoverlay.style.display = "none";
 
   //Remove Spinner
   // const spinner = document.querySelector(".spinner");
@@ -549,12 +554,33 @@ confirmBasket.addEventListener('click', (e) => {
 
 cancelBasket.addEventListener('click', function(e) {orderCompletion.close()});
 
+
 //Finish Button Clicked
+finishOrder.addEventListener('click', function(e) {
 
-  // store state in localStorage
-    // favourites
-    // orderNumber
+setLocalStorage();
+// Empty Favourites Array
+state.favourites = [];
 
-  // store 
+showcaseOverlay.style.display = "flex";
+
+orderSummary.classList.remove("dialog-scale");
+
+mainContainer.style.display = "block";
+
+console.log(state);
+
+});
 
 // Finish Button Clicked with Print
+orderPrint.addEventListener('click', function(e) {
+
+  //Open Print Window
+  window.print();
+
+  window.addEventListener("afterprint", (event) => {
+    console.log("After print");
+  });
+
+  console.log(state);
+})

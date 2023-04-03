@@ -515,3 +515,7 @@ Large devices (laptops/desktops, 992px and up)
 
 Extra large devices (large laptops and desktops, 1200px and up)
 @media only screen and (min-width: 1200px) {...} */
+
+/* Media styling for print preview */
+
+/* Remove buttons from print preveiew and add date and time and logo */
