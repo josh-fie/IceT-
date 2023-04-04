@@ -41,6 +41,7 @@ const productContainer = document.querySelector(".product-container");
 const previewContainer = document.querySelector(".basket-item-preview")
 
 const basketProductContainer = productModal3.querySelector(".product-container");
+const favouritesProductContainer = productModal4.querySelector(".product-container");
 
 // const preVatTotal = document.getElementById("total-pre-vat");
 // const incVatTotal = document.getElementById("total-inc-vat");
@@ -53,6 +54,25 @@ const state = {
   favourites: [[{},{},{}, "test"]],
   orderNumber: 0,
 };
+
+const closeOtherModels = function() {
+// Close Any Open Modals
+allProductModals.forEach(el => {
+  if(el.classList.contains("dialog-scale")) {
+    el.classList.remove("dialog-scale")}
+    // Clear Products HTML
+  const productsContainer = el.querySelector(".product-container");
+  productsContainer.innerHTML = ''
+  //Empty Preview Array
+  state.preview = [];
+
+  //Empty Preview Container
+  previewContainer.innerHTML = '';
+
+  mainContainer.style.display = "none";
+
+})};
+
 
 const setLocalStorage = function() {
   localStorage.setItem('favourites', JSON.stringify(state.favourites));
@@ -413,23 +433,7 @@ cancelBasketAdd.addEventListener('click', function() {
 shoppingBasket.addEventListener("click", (e) => {
   // Warning
 
-  // Close Any Open Modals
-  allProductModals.forEach(el => {
-    if(el.classList.contains("dialog-scale")) {
-      el.classList.remove("dialog-scale")
-      // Clear Products HTML
-    const productsContainer = el.querySelector(".product-container");
-    productsContainer.innerHTML = '';
-
-  //Empty Preview Array
-  state.preview = [];
-
-  //Empty Preview Container
-  previewContainer.innerHTML = '';
-    }
-  });
-
-  mainContainer.style.display = "none";
+  closeOtherModels();
 
   productModal3.classList.add("dialog-scale");
 
@@ -449,45 +453,110 @@ shoppingBasket.addEventListener("click", (e) => {
 favouriteMeals.addEventListener("click", (e) => {
 
   // Close all other open modals - same as when basket opened
+  closeOtherModels();
+
+  //Remove Display Main Container
+  mainContainer.style.display = "none";
+
+  //Show Favourite Meals Modal
+  productModal4.classList.add("dialog-scale")
 
   // Generate Meals from Favourites array
-    //Generate Meal Div and Meal Header and Contents for each index in favourites
-    //Then for each meal need secondary html generation for each item within the meal - following similar similar quantity numeration as per generateBasket
-    //For each Meal need to account for number already in basket as !> 10 in basket with meal items added
+
+  function removeDuplicates(myArr, prop) {
+    return myArr.filter((obj, pos, arr) => {
+        return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos
+    })
+  }
+
+  // Create new Favourites Array without duplicate items
+  const newFavourites = state.favourites.map( arr => removeDuplicates(arr, "id"));
+  console.log(newFavourites);
+
+  //Generate Meal Div and Meal Header and Contents for each index in favourites
+  newFavourites.forEach((arr, i, favArr) => {
+    const mealPrice = arr.reduce((acc, cur) => {
+      typeof cur === "object"? acc += (cur.price * cur.quantity) : acc;
+      return acc;
+    }, 0)
+    
+    arr.push(mealPrice);
+
+    console.log(newFavourites);
+
+    const markup = 
+        `<div data-index="${i}"> <!-- Meal Div-->
+          <div><!--Meal Header -->
+            <h2>${arr[arr.length - 2]}</h2>
+            <div>Meal Cost: £${(arr[arr.length - 1]).toFixed(2)}</div>
+            <button type="button" id="add-to-basket">Add Meal Items to Basket</button>
+              <dialog id="dialog-basket-add">
+                  <p>Add Meal to Basket?</p>
+                  <div>
+                    <button type="button" id="confirm-basket-add" class="confirm-button">Confirm</button>
+                    <button type="button" id="cancel-basket-add" class="cancel-button">Cancel</button>
+                  </div>
+              </dialog>
+          </div>
+            <div class="favourites-products"><!--Products in Meal Div-->
+              <!--Product Lines Generated in Here-->
+            </div>
+        </div>`;
+
+    favouritesProductContainer.insertAdjacentHTML('afterbegin', markup);
+
+    // Generate Second HTML for product lines
+    const favouritesProducts = favouritesProductContainer.querySelector(".favourites-products");
+
+    arr.forEach(obj => {
+      if(typeof obj === "object") {
+        const markup = 
+        `<div class="product-line" data-id="${obj.id}">
+          <img src=${obj.img} alt=${obj.alt}/>
+          <div>
+            <h3>${obj.icecream || obj.tea} ${Object.hasOwn(obj, 'icecream')? "Cone" : "Tea"}</h3>
+            <h3>x ${obj.quantity}</h3>
+          </div>
+        </div>`
+
+        favouritesProducts.insertAdjacentHTML('afterbegin', markup);
+      } else return;
+    })
+  })
+});
+
+// Favourite Meals Add to Basket Button Clicked
+
+favouritesProductContainer.addEventListener('click', (e) => {
+
+  //For each Meal need to account for number already in basket as !> 10 in basket with meal items added
+
+
     //If Add Meal to Basket clicked then close modal and update Basket overlay and add items to state.basket.
+  const clicked = e.target;
+  console.log(clicked);
 
-    // markup = 
-    // `<div> <!-- Meal Div-->
-    //     <div><!--Meal Header -->
-    //       <h2>Meal Name 1</h2>
-    //       <div>£All Meal Items: ${(preVatTotal).toFixed(2)}</div>
-    //       <button type="button" id="confirm-order">Add Meal Items to Basket</button>
-    //         <dialog id="confirm-basket-add">
-    //             <p>Add Meal to Basket?</p>
-    //             <div>
-    //               <button type="button" class="confirm-button">Confirm</button>
-    //               <button type="button" class="cancel-button">Cancel</button>
-    //             </div>
-    //         </dialog>
-    //     </div>
-    //     <div><!--Products in Meal Div--></div>
-    //       <div class="product-line" data-id="${object.id}">
-    //         <img/>
-    //         <div>
-    //           <h3>${object.icecream || object.tea} ${Object.hasOwn(object, 'icecream')? "Cone" : "Tea"}</h3>
-    //           <h3>x ${object.quantity}</h3>
-    //           <h6>Calories: ${object.calories * object.quantity}kcal</h6>
-    //           <h6>£${(object.price * object.quantity).toFixed(2)}</h6>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>`
+  if(clicked.id !== "add-to-basket") return; //guard clause to isolate clicked on button
+
+  const mealDiv = clicked.closest('[data-index]')
+
+  const mealIndex = mealDiv.dataset.index;
+
+  console.log(mealDiv, mealIndex);
+  const mealCopy = state.favourites[mealIndex].slice();
+  mealCopy.pop();
+  console.log(mealCopy, state)
+
+  if(mealCopy.length < 10 && mealCopy.length + state.basket.length < 10) {
+    state.basket.push(...mealCopy);
+    console.log(state.basket);
+
+    updateBasketOverlay();
+
+  } else (renderError("Basket Limit Reached"));
 
 
-  mainContainer.style.display = "none";
-  console.log(favouriteMeals);
-
-  productModal4.classList.add("dialog-scale")
+  // dialogBasketAdd.showModal();
 });
 
 // Event Listener for X Button in Modal for Products
