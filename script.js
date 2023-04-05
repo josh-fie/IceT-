@@ -5,6 +5,8 @@ const container = document.querySelector(".container");
 /* Start Page Overlay */
 
 const startpageButton = document.querySelector("#start_button");
+const navItems = document.querySelector(".nav-items");
+const navImages = navItems.querySelectorAll("img");
 const icecreamButton = document.querySelector(".ice-cream-card");
 const teaButton = document.querySelector(".tea-card");
 const shoppingBasket = document.querySelector(".shopping-basket");
@@ -17,6 +19,7 @@ const removeFromBasket = document.querySelector('remove_basket_icon');
 const addPreviewToBasket = document.getElementById("add-to-basket");
 const removeProductBasket = document.querySelectorAll("remove-product-basket")
 const dialogBasketAdd = document.getElementById("dialog-basket-add");
+const favMealDialogBasketAdd = document.getElementById("dialog-meal-basket-add");
 const confirmBasketAdd = document.getElementById("confirm-basket-add");
 const cancelBasketAdd = document.getElementById("cancel-basket-add");
 const basketCounter = document.getElementById("basket-counter");
@@ -257,6 +260,9 @@ const closeClearProductModal = function (element) {
 
   //Empty Preview Container
   previewContainer.innerHTML = '';
+
+  // Remove Clicked Status from Nav Buttons
+  navImages.forEach(img => img.classList.remove("clicked"));
 };
 
 // Basket Number Overlay
@@ -477,7 +483,11 @@ cancelBasketAdd.addEventListener('click', function() {
 // Basket icon Clicked
 
 shoppingBasket.addEventListener("click", (e) => {
-  // Warning
+
+  navImages.forEach(img => img.classList.remove("clicked"))
+
+  //Add Thick Underline When Active
+  e.target.classList.add("clicked");
 
   closeOtherModels();
 
@@ -492,11 +502,17 @@ shoppingBasket.addEventListener("click", (e) => {
   generateBasketTotals();
 
   console.log("After Basket generated:", state);
+
 });
 
 // Favourite Meals Icon Clicked
 
 favouriteMeals.addEventListener("click", (e) => {
+
+  navImages.forEach(img => img.classList.remove("clicked"))
+
+  //Add Thick Underline When Active
+  e.target.classList.add("clicked");
 
   // Close all other open modals - same as when basket opened
   closeOtherModels();
@@ -528,7 +544,7 @@ favouriteMeals.addEventListener("click", (e) => {
             <h2>${arr[arr.length - 2]}</h2>
             <div>Meal Cost: £${(arr[arr.length - 1]).toFixed(2)}</div>
             <button type="button" id="add-to-basket">Add Meal Items to Basket</button>
-              <dialog id="dialog-basket-add">
+              <dialog id="dialog-meal-basket-add">
                   <p>Add Meal to Basket?</p>
                   <div>
                     <button type="button" id="confirm-basket-add" class="confirm-button">Confirm</button>
@@ -567,10 +583,8 @@ favouriteMeals.addEventListener("click", (e) => {
 
 favouritesProductContainer.addEventListener('click', (e) => {
 
-  //For each Meal need to account for number already in basket as !> 10 in basket with meal items added
 
-
-    //If Add Meal to Basket clicked then close modal and update Basket overlay and add items to state.basket.
+  //If Add Meal to Basket clicked then close modal and update Basket overlay and add items to state.basket.
   const clicked = e.target;
   console.log(clicked);
 
@@ -692,6 +706,9 @@ confirmBasket.addEventListener('click', (e) => {
 
   productModal3.classList.remove("dialog-scale");
   orderSummary.classList.add("dialog-scale");
+
+  // Remove Clicked Status from Basket Icon
+  navImages.forEach(img => img.classList.remove("clicked"));
 
   //generate HTML for orderSummary including state.orderNumber.
   orderNumber.innerText = String(state.orderNumber);
