@@ -55,6 +55,13 @@ const state = {
   orderNumber: 0,
 };
 
+//Remove Duplicates from Array of Objects
+function removeDuplicates(myArr, prop) {
+  return myArr.filter((obj, pos, arr) => {
+      return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos
+  })
+}
+
 const closeOtherModels = function() {
 // Close Any Open Modals
 allProductModals.forEach(el => {
@@ -274,19 +281,57 @@ startpageButton.addEventListener("click", (e) => {
 
   //Retrieve LocalStorage Favourites and Order Number
   const getLocalStorage = () => {
-    const favourites = JSON.parse(localStorage.getItem('favourites'));
+    let favourites = JSON.parse(localStorage.getItem('favourites'));
     const orderNumber = JSON.parse(localStorage.getItem('orderNumber'));
+
+    if(orderNumber) {
+      state.orderNumber = orderNumber;
+    }
 
     if (!favourites) {
       console.log("no favourites")
-      state.favourites = [];
+      return state.favourites = [];
     }
-    console.log(favourites, orderNumber)
+
+    // Filter Favourites Array without duplicate items
+    const filteredFavourites = favourites.map( arr => removeDuplicates(arr, "id"));
+    console.log(favourites, filteredFavourites);
+
+    filteredFavourites.forEach((arr,_,array) => {
+      
+      arr.forEach(function(cur) {
+        console.log(cur)
+        if(typeof cur === "object") {
+        let countValue = cur.quantity - 1;
+        console.log(countValue);
+          while(countValue > 0){
+            arr.push(cur)
+            // console.log("add to array")
+            --countValue;
+          }
+        } else {console.log("not object")}
+      })
+    })
+
+    console.log(filteredFavourites);
+
+    //Moving Meal Name to end of array
+    filteredFavourites.forEach((arr) => {
+      arr.forEach((el, i) => {
+        if(typeof el === "string") {
+          const mealName = el;
+          arr.splice(i, 1);
+          arr.push(mealName);
+        }
+      })
+    })
+
+    favourites = filteredFavourites;
+
+    console.log(favourites, orderNumber);
+
     if(favourites && orderNumber) {
       state.favourites = favourites;
-      state.orderNumber = orderNumber;
-    }
-    if(orderNumber) {
       state.orderNumber = orderNumber;
     }
   };
@@ -399,6 +444,7 @@ productContainer.addEventListener("click", (e) => {
 // Add Preview to Basket within Modal SideBar
 
 addPreviewToBasket.addEventListener('click', () => {
+  if(!state.preview.length > 0) return;
   dialogBasketAdd.showModal();
 });
 
@@ -461,15 +507,7 @@ favouriteMeals.addEventListener("click", (e) => {
   //Show Favourite Meals Modal
   productModal4.classList.add("dialog-scale")
 
-  // Generate Meals from Favourites array
-
-  function removeDuplicates(myArr, prop) {
-    return myArr.filter((obj, pos, arr) => {
-        return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos
-    })
-  }
-
-  // Create new Favourites Array without duplicate items
+  // Create Favourites Array without duplicate items
   const newFavourites = state.favourites.map( arr => removeDuplicates(arr, "id"));
   console.log(newFavourites);
 
@@ -547,7 +585,7 @@ favouritesProductContainer.addEventListener('click', (e) => {
   mealCopy.pop();
   console.log(mealCopy, state)
 
-  if(mealCopy.length < 10 && mealCopy.length + state.basket.length < 10) {
+  if(mealCopy.length <= 10 && mealCopy.length + state.basket.length <= 10) {
     state.basket.push(...mealCopy);
     console.log(state.basket);
 
