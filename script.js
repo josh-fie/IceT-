@@ -95,6 +95,62 @@ allProductModals.forEach(el => {
 
 })};
 
+const getLocalStorage = () => {
+  let favourites = JSON.parse(localStorage.getItem('favourites'));
+  const orderNumber = JSON.parse(localStorage.getItem('orderNumber'));
+
+  if(orderNumber) {
+    state.orderNumber = orderNumber;
+  }
+
+  if (!favourites) {
+    console.log("no favourites")
+    return state.favourites = [];
+  }
+
+  // Filter Favourites Array without duplicate items
+  const filteredFavourites = favourites.map( arr => removeDuplicates(arr, "id"));
+  console.log(favourites, filteredFavourites);
+
+  filteredFavourites.forEach((arr,_,array) => {
+    
+    arr.forEach(function(cur) {
+      console.log(cur)
+      if(typeof cur === "object") {
+      let countValue = cur.quantity - 1;
+      console.log(countValue);
+        while(countValue > 0){
+          arr.push(cur)
+          // console.log("add to array")
+          --countValue;
+        }
+      } else {console.log("not object")}
+    })
+  })
+
+  console.log(filteredFavourites);
+
+  //Moving Meal Name to end of array
+  filteredFavourites.forEach((arr) => {
+    arr.forEach((el, i) => {
+      if(typeof el === "string") {
+        const mealName = el;
+        arr.splice(i, 1);
+        arr.push(mealName);
+      }
+    })
+  })
+
+  favourites = filteredFavourites;
+
+  console.log(favourites, orderNumber);
+
+  if(favourites && orderNumber) {
+    state.favourites = favourites;
+    state.orderNumber = orderNumber;
+  }
+};
+
 
 const setLocalStorage = function() {
   localStorage.setItem('favourites', JSON.stringify(state.favourites));
@@ -268,8 +324,12 @@ const generateBasket = function(basket) {
     obj.quantity = basketCounts[String(obj.id)];
   })
 
+  // Reset Adapted Favourites Array to source
+  getLocalStorage();
+
   // Create set from basket
-  const newBasket = [...new Set(basket)];
+  // const newBasket = [...new Set(basket)];
+  const newBasket = removeDuplicates(basket, "id");
   console.log(basket, newBasket);
 
   // Generate HTML
@@ -360,62 +420,6 @@ startpageButton.addEventListener("click", (e) => {
   renderSpinner(target);
 
   //Retrieve LocalStorage Favourites and Order Number
-  const getLocalStorage = () => {
-    let favourites = JSON.parse(localStorage.getItem('favourites'));
-    const orderNumber = JSON.parse(localStorage.getItem('orderNumber'));
-
-    if(orderNumber) {
-      state.orderNumber = orderNumber;
-    }
-
-    if (!favourites) {
-      console.log("no favourites")
-      return state.favourites = [];
-    }
-
-    // Filter Favourites Array without duplicate items
-    const filteredFavourites = favourites.map( arr => removeDuplicates(arr, "id"));
-    console.log(favourites, filteredFavourites);
-
-    filteredFavourites.forEach((arr,_,array) => {
-      
-      arr.forEach(function(cur) {
-        console.log(cur)
-        if(typeof cur === "object") {
-        let countValue = cur.quantity - 1;
-        console.log(countValue);
-          while(countValue > 0){
-            arr.push(cur)
-            // console.log("add to array")
-            --countValue;
-          }
-        } else {console.log("not object")}
-      })
-    })
-
-    console.log(filteredFavourites);
-
-    //Moving Meal Name to end of array
-    filteredFavourites.forEach((arr) => {
-      arr.forEach((el, i) => {
-        if(typeof el === "string") {
-          const mealName = el;
-          arr.splice(i, 1);
-          arr.push(mealName);
-        }
-      })
-    })
-
-    favourites = filteredFavourites;
-
-    console.log(favourites, orderNumber);
-
-    if(favourites && orderNumber) {
-      state.favourites = favourites;
-      state.orderNumber = orderNumber;
-    }
-  };
-
   getLocalStorage();
 
   // Updates Favourites Overlay
@@ -614,8 +618,10 @@ favouriteMeals.addEventListener("click", (e) => {
 // Favourite Meals Add to Basket/Remove from Basket Buttons Clicked
 
 favouritesProductContainer.addEventListener('click', function doit(e) {
-
+e.stopPropagation();
 // Issue with generating favourites into basket and multiple clicks recognised on adding multiple times. Undefined?
+favouritesProductContainer.removeEventListener('click', doit);
+favouritesProductContainer.addEventListener('click', doit);
 
   console.log("clicked on fav container");
   //If Add Meal to Basket clicked then close modal and update Basket overlay and add items to state.basket.
@@ -644,25 +650,31 @@ favouritesProductContainer.addEventListener('click', function doit(e) {
 
       favMealDialogBasketAdd.showModal();
       
-      confirmBasketAdd.addEventListener('click', (e) => {
+      confirmBasketAdd.addEventListener('click', function confirm(e){
+      
+        e.stopPropagation();
+        
       console.log("clicked on confirm button", mealCopy);
       
       state.basket.push(...mealCopy);
-      debugger;
+      
+      // debugger;
       updateBasketOverlay();
 
-      // Close Dialog
+      // // Close Dialog
       favMealDialogBasketAdd.close();
 
-      e.stopPropagation();
+      return confirmBasketAdd.removeEventListener('click', confirm);
+
       });
 
       cancelBasketAdd.addEventListener('click', (e) => {
+        e.stopPropagation();
+
         console.log("clicked on cancel button");
       // Close Dialog
       favMealDialogBasketAdd.close();
 
-      e.stopPropagation();
       });
     } else (renderError("Basket Limit Reached"));
   }
