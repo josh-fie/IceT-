@@ -205,7 +205,7 @@ const generateProducts = (products) => {
         <div>
           <h3>${object.icecream || object.tea} ${Object.hasOwn(object, 'icecream')? "Cone" : "Tea"}</h3>
           <h6>Calories: ${object.calories}kcal</h6>
-          <h6>£${(object.price).toFixed(2)}</h6>
+          <h3>£${(object.price).toFixed(2)}</h3>
         </div>
         <div class="quantity-counter">
           <img
@@ -268,17 +268,21 @@ const generateFavs = function() {
     const markup = 
         `<div data-index="${i}"> <!-- Meal Div-->
           <div><!--Meal Header -->
-            <h2>${arr[arr.length - 2]}</h2>
-            <div>Meal Cost: £${(arr[arr.length - 1]).toFixed(2)}</div>
-            <button type="button" id="add-to-basket">Add Meal Items to Basket</button>
-              <dialog id="dialog-meal-basket-add">
-                  <p>Add Meal to Basket?</p>
-                  <div>
-                    <button type="button" id="confirm-basket-add" class="confirm-button">Confirm</button>
-                    <button type="button" id="cancel-basket-add" class="cancel-button">Cancel</button>
-                  </div>
-              </dialog>
-            <button type="button" id="remove-favs">Remove</button>
+            <div>
+              <div>
+                <h2>${arr[arr.length - 2]}</h2>
+                <h1>£${(arr[arr.length - 1]).toFixed(2)}</h1>
+              </div>
+              <button type="button" id="add-to-basket">Add Basket</button>
+                <dialog id="dialog-meal-basket-add">
+                    <p>Add Meal to Basket?</p>
+                    <div>
+                      <button type="button" id="confirm-basket-add" class="confirm-button">Confirm</button>
+                      <button type="button" id="cancel-basket-add" class="cancel-button">Cancel</button>
+                    </div>
+                </dialog>
+              <button type="button" id="remove-favs">Remove</button>
+            </div>
           </div>
             <div class="favourites-products"><!--Products in Meal Div-->
               <!--Product Lines Generated in Here-->
