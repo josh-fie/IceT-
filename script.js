@@ -54,9 +54,21 @@ const state = {
   preview: [],
   basket: [],
   basketLimit: 10,
-  favourites: [[{},{},{}, "test"]],
+  favourites: [],
   orderNumber: 0,
 };
+
+const _resetOrder = function() {
+  state.orderNumber = 0;
+  state.favourites = [];
+  state.basket = [];
+  state.preview = [];
+  localStorage.removeItem("favourites");
+  localStorage.removeItem("orderNumber");
+  updateBasketOverlay();
+  updateFavouritesOverlay();
+  console.log("Order Reset");
+}
 
 //Remove Duplicates from Array of Objects
 function removeDuplicates(myArr, prop) {
@@ -176,6 +188,68 @@ const generatePreview = function(preview) {
 
   })
 };
+
+const generateFavs = function() {
+  //Clear Fav Container
+  favouritesProductContainer.innerHTML = '';
+
+  // Create Favourites Array without duplicate items
+  // ??????? not needed as duplicates removed at localstorage retrieval
+  const newFavourites = state.favourites.map( arr => removeDuplicates(arr, "id"));
+  console.log(newFavourites);
+
+  //Generate Meal Div and Meal Header and Contents for each index in favourites
+  newFavourites.forEach((arr, i, favArr) => {
+    const mealPrice = arr.reduce((acc, cur) => {
+      typeof cur === "object"? acc += (cur.price * cur.quantity) : acc;
+      return acc;
+    }, 0)
+    
+    arr.push(mealPrice);
+
+    console.log(newFavourites);
+
+    const markup = 
+        `<div data-index="${i}"> <!-- Meal Div-->
+          <div><!--Meal Header -->
+            <h2>${arr[arr.length - 2]}</h2>
+            <div>Meal Cost: £${(arr[arr.length - 1]).toFixed(2)}</div>
+            <button type="button" id="add-to-basket">Add Meal Items to Basket</button>
+              <dialog id="dialog-meal-basket-add">
+                  <p>Add Meal to Basket?</p>
+                  <div>
+                    <button type="button" id="confirm-basket-add" class="confirm-button">Confirm</button>
+                    <button type="button" id="cancel-basket-add" class="cancel-button">Cancel</button>
+                  </div>
+              </dialog>
+            <button type="button" id="remove-favs">Remove</button>
+          </div>
+            <div class="favourites-products"><!--Products in Meal Div-->
+              <!--Product Lines Generated in Here-->
+            </div>
+        </div>`;
+
+    favouritesProductContainer.insertAdjacentHTML('afterbegin', markup);
+
+    // Generate Second HTML for product lines
+    const favouritesProducts = favouritesProductContainer.querySelector(".favourites-products");
+
+    arr.forEach(obj => {
+      if(typeof obj === "object") {
+        const markup = 
+        `<div class="product-line" data-id="${obj.id}">
+          <img src=${obj.img} alt=${obj.alt}/>
+          <div>
+            <h3>${obj.icecream || obj.tea} ${Object.hasOwn(obj, 'icecream')? "Cone" : "Tea"}</h3>
+            <h3>x ${obj.quantity}</h3>
+          </div>
+        </div>`
+
+        favouritesProducts.insertAdjacentHTML('afterbegin', markup);
+      } else return;
+    })
+  })
+}
 
 const generateBasket = function(basket) {
   basketProductContainer.innerHTML = '';
@@ -395,8 +469,8 @@ productContainer.addEventListener("click", (e) => {
   let counter = clicked.previousElementSibling || clicked.nextElementSibling;
   
   if (clickedClasses[0] === "add_basket_icon") {
-    // Conditional if Basket < 10
-    if(state.preview.length < 10 && state.preview.length + state.basket.length < 10) {
+    // Conditional if Basket < basketLimit
+    if(state.preview.length < state.basketLimit && state.preview.length + state.basket.length < state.basketLimit) {
 
     // Increase Counter
     let digit = +counter.innerText;
@@ -484,6 +558,11 @@ cancelBasketAdd.addEventListener('click', function() {
 
 shoppingBasket.addEventListener("click", (e) => {
 
+  // If Empty Basket
+  if(state.basket.length === 0 && !e.target.classList.contains("clicked")) {
+    return renderError('Basket is currently empty!');
+  }
+
   navImages.forEach(img => img.classList.remove("clicked"))
 
   //Add Thick Underline When Active
@@ -509,6 +588,11 @@ shoppingBasket.addEventListener("click", (e) => {
 
 favouriteMeals.addEventListener("click", (e) => {
 
+  // If Empty Favourites
+  if(state.favourites.length === 0 && !e.target.classList.contains("clicked")) {
+    return renderError('Favourites is currently empty!');
+  }
+
   navImages.forEach(img => img.classList.remove("clicked"))
 
   //Add Thick Underline When Active
@@ -523,92 +607,83 @@ favouriteMeals.addEventListener("click", (e) => {
   //Show Favourite Meals Modal
   productModal4.classList.add("dialog-scale")
 
-  // Create Favourites Array without duplicate items
-  const newFavourites = state.favourites.map( arr => removeDuplicates(arr, "id"));
-  console.log(newFavourites);
-
-  //Generate Meal Div and Meal Header and Contents for each index in favourites
-  newFavourites.forEach((arr, i, favArr) => {
-    const mealPrice = arr.reduce((acc, cur) => {
-      typeof cur === "object"? acc += (cur.price * cur.quantity) : acc;
-      return acc;
-    }, 0)
-    
-    arr.push(mealPrice);
-
-    console.log(newFavourites);
-
-    const markup = 
-        `<div data-index="${i}"> <!-- Meal Div-->
-          <div><!--Meal Header -->
-            <h2>${arr[arr.length - 2]}</h2>
-            <div>Meal Cost: £${(arr[arr.length - 1]).toFixed(2)}</div>
-            <button type="button" id="add-to-basket">Add Meal Items to Basket</button>
-              <dialog id="dialog-meal-basket-add">
-                  <p>Add Meal to Basket?</p>
-                  <div>
-                    <button type="button" id="confirm-basket-add" class="confirm-button">Confirm</button>
-                    <button type="button" id="cancel-basket-add" class="cancel-button">Cancel</button>
-                  </div>
-              </dialog>
-          </div>
-            <div class="favourites-products"><!--Products in Meal Div-->
-              <!--Product Lines Generated in Here-->
-            </div>
-        </div>`;
-
-    favouritesProductContainer.insertAdjacentHTML('afterbegin', markup);
-
-    // Generate Second HTML for product lines
-    const favouritesProducts = favouritesProductContainer.querySelector(".favourites-products");
-
-    arr.forEach(obj => {
-      if(typeof obj === "object") {
-        const markup = 
-        `<div class="product-line" data-id="${obj.id}">
-          <img src=${obj.img} alt=${obj.alt}/>
-          <div>
-            <h3>${obj.icecream || obj.tea} ${Object.hasOwn(obj, 'icecream')? "Cone" : "Tea"}</h3>
-            <h3>x ${obj.quantity}</h3>
-          </div>
-        </div>`
-
-        favouritesProducts.insertAdjacentHTML('afterbegin', markup);
-      } else return;
-    })
-  })
+  // Generate Favs HTML
+  generateFavs();
 });
 
-// Favourite Meals Add to Basket Button Clicked
+// Favourite Meals Add to Basket/Remove from Basket Buttons Clicked
 
-favouritesProductContainer.addEventListener('click', (e) => {
+favouritesProductContainer.addEventListener('click', function doit(e) {
 
+// Issue with generating favourites into basket and multiple clicks recognised on adding multiple times. Undefined?
 
+  console.log("clicked on fav container");
   //If Add Meal to Basket clicked then close modal and update Basket overlay and add items to state.basket.
   const clicked = e.target;
   console.log(clicked);
 
-  if(clicked.id !== "add-to-basket") return; //guard clause to isolate clicked on button
+  if(clicked.id !== "add-to-basket" && clicked.id !== "remove-favs") return; //guard clause to isolate add/remove buttons
 
   const mealDiv = clicked.closest('[data-index]')
 
   const mealIndex = mealDiv.dataset.index;
 
   console.log(mealDiv, mealIndex);
-  const mealCopy = state.favourites[mealIndex].slice();
+  const mealCopy = state.favourites[mealIndex].slice(); /* issue here with duplicates on index??? */
   mealCopy.pop();
   console.log(mealCopy, state)
 
-  if(mealCopy.length <= 10 && mealCopy.length + state.basket.length <= 10) {
-    state.basket.push(...mealCopy);
-    console.log(state.basket);
 
-    updateBasketOverlay();
+  if(clicked.id === "add-to-basket") {
+    if(mealCopy.length <= state.basketLimit && mealCopy.length + state.basket.length <= state.basketLimit) {
 
-  } else (renderError("Basket Limit Reached"));
+      //Open Dialog Modal
+      const favMealDialogBasketAdd = mealDiv.querySelector("#dialog-meal-basket-add");
+      const confirmBasketAdd = mealDiv.querySelector("#confirm-basket-add");
+      const cancelBasketAdd = mealDiv.querySelector("#cancel-basket-add");
 
+      favMealDialogBasketAdd.showModal();
+      
+      confirmBasketAdd.addEventListener('click', (e) => {
+      console.log("clicked on confirm button", mealCopy);
+      
+      state.basket.push(...mealCopy);
+      debugger;
+      updateBasketOverlay();
 
-  // dialogBasketAdd.showModal();
+      // Close Dialog
+      favMealDialogBasketAdd.close();
+
+      e.stopPropagation();
+      });
+
+      cancelBasketAdd.addEventListener('click', (e) => {
+        console.log("clicked on cancel button");
+      // Close Dialog
+      favMealDialogBasketAdd.close();
+
+      e.stopPropagation();
+      });
+    } else (renderError("Basket Limit Reached"));
+  }
+
+  if(clicked.id === "remove-favs") {
+
+    console.log("Remove button clicked");
+    // Remove from Favourites
+    state.favourites.splice(+[mealIndex], 1)
+
+    console.log(state.favourites);
+
+    // Regenerate Favourites
+    generateFavs();
+
+    // Update Fav Overlay
+    updateFavouritesOverlay();
+
+    // Update localStorage
+    setLocalStorage();
+  }
 });
 
 // Event Listener for X Button in Modal for Products
