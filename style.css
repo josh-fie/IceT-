@@ -19,7 +19,7 @@ body {
 }
 
 .container {
-  width: 100vw;
+  /* width: 100vw; */
   height: 100%;
 }
 
@@ -363,7 +363,7 @@ button:hover {
 }
 
 .modal-container.basket .product-container img{
-  width: 50%;
+  width: 100%;
 }
 
 .product-container img {
@@ -391,7 +391,7 @@ button:hover {
   font-size: .8rem;
   flex-basis: 90%;
   height: 20%;
-  grid-template-columns: 20% 60% 20%;
+  grid-template-columns: 30% 50% 20%;
 }
 
 .modal-container.favourites .product-container .product-line {
@@ -410,8 +410,8 @@ button:hover {
   /* padding: 5px 10px; */
   border: none;
   border-radius: 5px;
-  width: 75%;
-  height: 75%
+  width: 100%;
+  height: 80%
 }
 
 /* Shopping Basket Product Line */
@@ -610,7 +610,7 @@ dialog button.cancel-button {
 /* Media Queries */
 
 /* Tiny Width (phones, 350px and down) */
-@media only screen and (max-width: 350px) {
+@media only screen and (max-width: 400px) {
 /* Order Summary Modal */
   .order-summary > div {
     display: flex;
@@ -633,6 +633,10 @@ dialog button.cancel-button {
 
   .modal-container.favourites .product-container .favourites-products {
     margin: 15px 0 0 0;
+  }
+
+  .product-line {
+    flex-basis: 100%;
   }
 }
 
