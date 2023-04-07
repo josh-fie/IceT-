@@ -236,7 +236,7 @@ const generatePreview = function(preview) {
           <img src=${object.img} alt=${object.alt} />
           <div>
             <h3>${object.icecream || object.tea} x${object.quantity}</h3>
-            <h6>£${(object.price).toFixed(2)}</h6>
+            <h4>£${(object.price).toFixed(2)}</h4>
           </div>
         </div>`
 
