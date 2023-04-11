@@ -21,6 +21,7 @@ body {
 .container {
   /* width: 100vw; */
   height: 100%;
+  position: relative;
 }
 
 ._error {
@@ -37,7 +38,7 @@ body {
 }
 
 button:hover {
-  box-shadow: inset 0px 0px 0px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0px 0px 0px 50px rgba(0, 0, 0, 0.1);
 }
 
 /* Showcase Startpage Overlay*/
@@ -220,14 +221,12 @@ button:hover {
 
 #product-modal, #product-modal3, #product-modal4, .order-summary {
   display: flex;
-  background-color: rgba(0, 0, 0, 0.1);
+  /* background-color: rgba(0, 0, 0, 0.1); */
   top: 80px;
   left: 0;
   margin: auto;
-  position: fixed;
-  height: 85%;
-  width: 100vw;
-  overflow: scroll;
+  position: absolute;
+  width: 100%;
   padding: 1rem;
   border: none;
   visibility: hidden;
@@ -235,23 +234,24 @@ button:hover {
   transition: transform 300ms;
 }
 
-#product-modal3, #product-modal4, .order-summary /*Basket Favourite Meals Order Summary Modals*/ {
-  width: 100%;
-}
-
 .order-summary {
+  position: absolute;
   top: 0;
-  height: 100vh;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  overflow: hidden;
 }
 
 .order-summary > div {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  height: 100%;
+}
+
+.order-summary h2, .order-summary h3 {
+  height: 100%;
+  padding: 20px;
 }
 
 .order-summary > div > button {
@@ -461,16 +461,22 @@ span {
 .modal-side-bar {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   align-items: center;
   width: 25%;
   background-color: white;
   box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.5);;
-  height: 450px;
+  /* height: 100%; */
 }
 
 .modal-side-bar.basket{
   width: 40%;
+  height: 100%;
+  justify-content: flex-start;
+}
+
+.modal-side-bar > img {
+  padding-bottom: 50px;
 }
 
 .modal-side-bar img {
@@ -479,6 +485,7 @@ span {
 
 .modal-side-bar img + img {
   width: 20%;
+  padding-bottom: 10px;
 }
 
 .basket-item-preview {
@@ -537,6 +544,10 @@ span {
   color: white;
 }
 
+.modal-side-bar #add-to-basket, .modal-side-bar #confirm-order {
+  margin-bottom: 10px;
+}
+
 /* Dialogs General Styling*/
 
 dialog[open] {
@@ -545,8 +556,13 @@ dialog[open] {
   align-items: center;
   justify-content: space-around;
   margin: auto;
-  border: .25px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 5px;
+  padding: 5px;
+}
+
+dialog p, dialog div, dialog input {
+  padding: 5px;
 }
 
 dialog::backdrop {
@@ -598,10 +614,10 @@ dialog button.cancel-button {
   width: 100%;
 }
 
-.modal-container.favourites .product-container button {
+/* .modal-container.favourites .product-container button {
   width: 100%;
 
-}
+} */
 
 .modal-container.favourites .product-container .favourites-products {
   display: flex;
@@ -715,10 +731,6 @@ dialog button.cancel-button {
     grid-auto-rows: auto;
   }
 
-  .modal-side-bar {
-    width: 40%;
-  }
-
   .modal-side-bar img + img {
     width: 50%;
   }
@@ -788,10 +800,10 @@ dialog button.cancel-button {
     width: 100%;
   }
 
-  .modal-container.favourites .product-container button {
+  /* .modal-container.favourites .product-container button {
     width: 100%;
 
-  }
+  } */
 
   .modal-container.favourites .product-container .favourites-products {
     display: flex;
@@ -841,15 +853,6 @@ Medium devices (landscape tablets, 768px and up)
   }
 }
 
-/*
-
-Extra large devices (large laptops and desktops, 1200px and up)
-@media only screen and (min-width: 1200px) {...} */
-
-/* Media styling for print preview */
-
-/* Remove buttons from print preveiew and add date and time and logo */
-
 /* Height Adjusted Media Query */
 @media only screen and (max-height: 600px) and (min-width: 600px) {
   .modal-container.basket .product-container .product-line {
@@ -867,12 +870,8 @@ Extra large devices (large laptops and desktops, 1200px and up)
   .modal-side-bar.basket{
     width: 40%;
     flex-wrap: wrap;
+    /* height: 300px; */
   }
-
-  .modal-side-bar.basket > img, .modal-side-bar.basket > div {
-    /* flex-basis: 25%; */
-    width: 50%;
-  } 
 
   .showcase_overlay img {
     width: auto;
@@ -888,10 +887,19 @@ Extra large devices (large laptops and desktops, 1200px and up)
   .modal-container.basket .product-container .product-line {
     font-size: .8rem;
     flex-basis: 90%;
-    height: 100px;
     grid-template-columns: 40% 60%;
-    /* grid-template-columns: 1fr 1fr 1fr; */
   }
+
+  .modal-side-bar {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-around; */
+    align-items: center;
+    width: 40%;
+    background-color: white;
+    box-shadow: 0px 0px 3px 0px rgb(0 0 0 / 50%);
+    /* height: 100%; */
+}
 }
 
 @media only screen and (max-height: 400px) {
@@ -899,4 +907,13 @@ Extra large devices (large laptops and desktops, 1200px and up)
     width: 15%;
   }
 
+  .order-summary {
+    overflow: scroll;
+  }
+
 }
+
+/* Media Query Print */
+@media print {
+  .navigation, .print-order-number, .finish { display:none }
+ }

@@ -6,6 +6,7 @@ const container = document.querySelector(".container");
 
 const startpageButton = document.querySelector("#start_button");
 const navItems = document.querySelector(".nav-items");
+const navigation = document.querySelector(".navigation");
 const navImages = navItems.querySelectorAll("img");
 const icecreamButton = document.querySelector(".ice-cream-card");
 const teaButton = document.querySelector(".tea-card");
@@ -801,6 +802,9 @@ confirmBasket.addEventListener('click', (e) => {
   // Remove Clicked Status from Basket Icon
   navImages.forEach(img => img.classList.remove("clicked"));
 
+  // Navigation Display None
+  navigation.style.display = "none";
+
   //generate HTML for orderSummary including state.orderNumber.
   orderNumber.innerText = String(state.orderNumber);
 
@@ -822,6 +826,9 @@ showcaseOverlay.style.display = "flex";
 updateFavouritesOverlay();
 
 orderSummary.classList.remove("dialog-scale");
+
+// Navigation Display
+navigation.style.display = "flex";
 
 mainContainer.style.display = "block";
 
