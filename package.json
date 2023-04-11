@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/josh-fie/Juicee#readme",
   "dependencies": {
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
     "parcel": "^2.8.3"
   }
 }
