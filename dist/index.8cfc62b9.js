@@ -559,10 +559,6 @@ function hmrAccept(bundle, id) {
 },{}],"6rimH":[function(require,module,exports) {
 var _coreJs = require("core.js/dist/core.js");
 "use strict";
-// import images from '';
-// import logos from './logo';
-// const file_name = "file-name"
-// {/* <img src=`${images[file_name]}` /> */}
 const container = document.querySelector(".container");
 /* Start Page Overlay */ const startpageButton = document.querySelector("#start_button");
 const navItems = document.querySelector(".nav-items");
@@ -649,28 +645,20 @@ const getLocalStorage = ()=>{
     let favourites = JSON.parse(localStorage.getItem("favourites"));
     const orderNumber = JSON.parse(localStorage.getItem("orderNumber"));
     if (orderNumber) state.orderNumber = orderNumber;
-    if (!favourites) {
-        console.log("no favourites");
-        return state.favourites = [];
-    }
+    if (!favourites) return state.favourites = [];
     // Filter Favourites Array without duplicate items
     const filteredFavourites = favourites.map((arr)=>removeDuplicates(arr, "id"));
-    console.log(favourites, filteredFavourites);
     filteredFavourites.forEach((arr, _, array)=>{
         arr.forEach(function(cur) {
-            console.log(cur);
             if (typeof cur === "object") {
                 let countValue = cur.quantity - 1;
-                console.log(countValue);
                 while(countValue > 0){
                     arr.push(cur);
-                    // console.log("add to array")
                     --countValue;
                 }
             } else console.log("not object");
         });
     });
-    console.log(filteredFavourites);
     //Moving Meal Name to end of array
     filteredFavourites.forEach((arr)=>{
         arr.forEach((el, i)=>{
@@ -682,7 +670,6 @@ const getLocalStorage = ()=>{
         });
     });
     favourites = filteredFavourites;
-    console.log(favourites, orderNumber);
     if (favourites && orderNumber) {
         state.favourites = favourites;
         state.orderNumber = orderNumber;
@@ -768,9 +755,7 @@ const generateFavs = function() {
     //Clear Fav Container
     favouritesProductContainer.innerHTML = "";
     // Create Favourites Array without duplicate items
-    // ??????? not needed as duplicates removed at localstorage retrieval
     const newFavourites = state.favourites.map((arr)=>removeDuplicates(arr, "id"));
-    console.log(newFavourites);
     //Generate Meal Div and Meal Header and Contents for each index in favourites
     newFavourites.forEach((arr, i, favArr)=>{
         const mealPrice = arr.reduce((acc, cur)=>{
@@ -778,7 +763,6 @@ const generateFavs = function() {
             return acc;
         }, 0);
         arr.push(mealPrice);
-        console.log(newFavourites);
         const markup = `<div data-index="${i}"> <!-- Meal Div-->
           <div><!--Meal Header -->
             <div>
@@ -831,9 +815,7 @@ const generateBasket = function(basket) {
     // Reset Adapted Favourites Array to source
     getLocalStorage();
     // Create set from basket
-    // const newBasket = [...new Set(basket)];
     const newBasket = removeDuplicates(basket, "id");
-    console.log(basket, newBasket);
     // Generate HTML
     newBasket.forEach(function(object, index, arr) {
         const markup = `<div class="product-line" data-id="${object.id}">
@@ -906,7 +888,6 @@ startpageButton.addEventListener("click", (e)=>{
     getLocalStorage();
     // Updates Favourites Overlay
     updateFavouritesOverlay();
-    console.log(state);
     // Hide Start Overlay
     showcaseOverlay.style.display = "none";
     // Remove Spinner from DOM
@@ -955,7 +936,6 @@ productContainer.addEventListener("click", (e)=>{
             linkedProduct.quantity = digit;
             state.preview.push(linkedProduct);
         } else renderError("Basket Limit Reached");
-        console.log(state.preview);
         // Generate Previews
         generatePreview(state.preview);
     }
@@ -974,7 +954,6 @@ productContainer.addEventListener("click", (e)=>{
             ...filteredNotMatching,
             ...filteredMatching
         ];
-        console.log(state.preview);
         // Generate Previews
         generatePreview(state.preview);
     }
@@ -1010,12 +989,10 @@ shoppingBasket.addEventListener("click", (e)=>{
     e.target.classList.add("clicked");
     closeOtherModels();
     productModal3.classList.add("dialog-scale");
-    console.log(state.basket);
     // Generate HTML for Basket Items
     generateBasket(state.basket);
     // Show £ Totals
     generateBasketTotals();
-    console.log("After Basket generated:", state);
 });
 // Favourite Meals Icon Clicked
 favouriteMeals.addEventListener("click", (e)=>{
@@ -1036,20 +1013,15 @@ favouriteMeals.addEventListener("click", (e)=>{
 // Favourite Meals Add to Basket/Remove from Basket Buttons Clicked
 favouritesProductContainer.addEventListener("click", function doit(e) {
     e.stopPropagation();
-    // Issue with generating favourites into basket and multiple clicks recognised on adding multiple times. Undefined?
     favouritesProductContainer.removeEventListener("click", doit);
     favouritesProductContainer.addEventListener("click", doit);
-    console.log("clicked on fav container");
     //If Add Meal to Basket clicked then close modal and update Basket overlay and add items to state.basket.
     const clicked = e.target;
-    console.log(clicked);
     if (clicked.id !== "add-to-basket" && clicked.id !== "remove-favs") return; //guard clause to isolate add/remove buttons
     const mealDiv = clicked.closest("[data-index]");
     const mealIndex = mealDiv.dataset.index;
-    console.log(mealDiv, mealIndex);
     const mealCopy = state.favourites[mealIndex].slice(); /* issue here with duplicates on index??? */ 
     mealCopy.pop();
-    console.log(mealCopy, state);
     if (clicked.id === "add-to-basket") {
         if (mealCopy.length <= state.basketLimit && mealCopy.length + state.basket.length <= state.basketLimit) {
             //Open Dialog Modal
@@ -1059,7 +1031,6 @@ favouritesProductContainer.addEventListener("click", function doit(e) {
             favMealDialogBasketAdd.showModal();
             confirmBasketAdd.addEventListener("click", function confirm(e) {
                 e.stopPropagation();
-                console.log("clicked on confirm button", mealCopy);
                 state.basket.push(...mealCopy);
                 // debugger;
                 updateBasketOverlay();
@@ -1069,19 +1040,16 @@ favouritesProductContainer.addEventListener("click", function doit(e) {
             });
             cancelBasketAdd.addEventListener("click", (e)=>{
                 e.stopPropagation();
-                console.log("clicked on cancel button");
                 // Close Dialog
                 favMealDialogBasketAdd.close();
             });
         } else renderError("Basket Limit Reached");
     }
     if (clicked.id === "remove-favs") {
-        console.log("Remove button clicked");
         // Remove from Favourites
         state.favourites.splice(+[
             mealIndex
         ], 1);
-        console.log(state.favourites);
         // Regenerate Favourites
         generateFavs();
         // Update Fav Overlay
@@ -1117,25 +1085,17 @@ confirmOrder.addEventListener("click", ()=>{
 });
 // Favourite Meal not Checked
 favouriteCheckbox.addEventListener("change", function() {
-    if (this.checked) {
-        console.log("Checkbox is checked..");
-        mealNameDiv.style.display = "block";
-    } else {
-        console.log("Checkbox is not checked..");
-        mealNameDiv.style.display = "none";
-    }
+    if (this.checked) mealNameDiv.style.display = "block";
+    else mealNameDiv.style.display = "none";
 });
 // Order Summary Show upon Basket Confirmation
 confirmBasket.addEventListener("click", (e)=>{
     //Validation of Inputs
     const dialogCommit = orderCompletion.children;
-    console.log(dialogCommit);
     const checkedValue = dialogCommit[0].children.favourite.checked;
     const mealNameValue = dialogCommit[1].children.mealname.value;
-    console.log(checkedValue, mealNameValue);
     let storedMealNames;
     state.favourites.length > 0 ? storedMealNames = state.favourites.map((arr)=>arr[arr.length - 1]) : storedMealNames = [];
-    console.log(storedMealNames);
     if (checkedValue && storedMealNames.includes(mealNameValue)) return renderError("Meal Name Unavailable", favouriteCheckbox); //guard clause to produce alert
     if (checkedValue && mealNameValue === "") return renderError("Meal Name Required", favouriteCheckbox); //guard clause to produce alert
     orderCompletion.returnValue = "Confirm";
@@ -1160,7 +1120,6 @@ confirmBasket.addEventListener("click", (e)=>{
     navigation.style.display = "none";
     //generate HTML for orderSummary including state.orderNumber.
     orderNumber.innerText = String(state.orderNumber);
-    console.log(state);
 });
 cancelBasket.addEventListener("click", function(e) {
     orderCompletion.close();
@@ -1176,7 +1135,6 @@ finishOrder.addEventListener("click", function(e) {
     // Navigation Display
     navigation.style.display = "flex";
     mainContainer.style.display = "block";
-    console.log(state);
 });
 // Finish Button Clicked with Print
 orderPrint.addEventListener("click", function(e) {
@@ -1185,7 +1143,6 @@ orderPrint.addEventListener("click", function(e) {
     window.addEventListener("afterprint", (event)=>{
         console.log("After print");
     });
-    console.log(state);
 });
 
 },{"core.js/dist/core.js":"038uS"}],"038uS":[function(require,module,exports) {

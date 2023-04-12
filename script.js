@@ -1,10 +1,6 @@
 "use strict";
 
 import 'core.js/dist/core.js';
-// import images from '';
-// import logos from './logo';
-// const file_name = "file-name"
-// {/* <img src=`${images[file_name]}` /> */}
 
 const container = document.querySelector(".container");
 
@@ -111,31 +107,24 @@ const getLocalStorage = () => {
   }
 
   if (!favourites) {
-    console.log("no favourites")
     return state.favourites = [];
   }
 
   // Filter Favourites Array without duplicate items
   const filteredFavourites = favourites.map( arr => removeDuplicates(arr, "id"));
-  console.log(favourites, filteredFavourites);
 
   filteredFavourites.forEach((arr,_,array) => {
     
     arr.forEach(function(cur) {
-      console.log(cur)
       if(typeof cur === "object") {
       let countValue = cur.quantity - 1;
-      console.log(countValue);
         while(countValue > 0){
           arr.push(cur)
-          // console.log("add to array")
           --countValue;
         }
       } else {console.log("not object")}
     })
   })
-
-  console.log(filteredFavourites);
 
   //Moving Meal Name to end of array
   filteredFavourites.forEach((arr) => {
@@ -149,8 +138,6 @@ const getLocalStorage = () => {
   })
 
   favourites = filteredFavourites;
-
-  console.log(favourites, orderNumber);
 
   if(favourites && orderNumber) {
     state.favourites = favourites;
@@ -257,9 +244,7 @@ const generateFavs = function() {
   favouritesProductContainer.innerHTML = '';
 
   // Create Favourites Array without duplicate items
-  // ??????? not needed as duplicates removed at localstorage retrieval
   const newFavourites = state.favourites.map( arr => removeDuplicates(arr, "id"));
-  console.log(newFavourites);
 
   //Generate Meal Div and Meal Header and Contents for each index in favourites
   newFavourites.forEach((arr, i, favArr) => {
@@ -269,8 +254,6 @@ const generateFavs = function() {
     }, 0)
     
     arr.push(mealPrice);
-
-    console.log(newFavourites);
 
     const markup = 
         `<div data-index="${i}"> <!-- Meal Div-->
@@ -339,9 +322,7 @@ const generateBasket = function(basket) {
   getLocalStorage();
 
   // Create set from basket
-  // const newBasket = [...new Set(basket)];
   const newBasket = removeDuplicates(basket, "id");
-  console.log(basket, newBasket);
 
   // Generate HTML
   newBasket.forEach( function (object, index, arr) {
@@ -436,8 +417,6 @@ startpageButton.addEventListener("click", (e) => {
   // Updates Favourites Overlay
   updateFavouritesOverlay();
 
-  console.log(state);
-
   // Hide Start Overlay
 
   showcaseOverlay.style.display = "none";
@@ -507,8 +486,6 @@ productContainer.addEventListener("click", (e) => {
 
     } else {renderError("Basket Limit Reached")}
 
-    console.log(state.preview);
-
     // Generate Previews
     generatePreview(state.preview);
   }
@@ -528,8 +505,6 @@ productContainer.addEventListener("click", (e) => {
     filteredMatching.pop();
     filteredMatching.forEach(obj => obj.quantity = digit);
     state.preview = [...filteredNotMatching, ...filteredMatching];
-    
-    console.log(state.preview);
 
     // Generate Previews
     generatePreview(state.preview);
@@ -587,15 +562,11 @@ shoppingBasket.addEventListener("click", (e) => {
 
   productModal3.classList.add("dialog-scale");
 
-  console.log(state.basket);
-
   // Generate HTML for Basket Items
   generateBasket(state.basket);
 
   // Show £ Totals
   generateBasketTotals();
-
-  console.log("After Basket generated:", state);
 
 });
 
@@ -630,14 +601,12 @@ favouriteMeals.addEventListener("click", (e) => {
 
 favouritesProductContainer.addEventListener('click', function doit(e) {
 e.stopPropagation();
-// Issue with generating favourites into basket and multiple clicks recognised on adding multiple times. Undefined?
+
 favouritesProductContainer.removeEventListener('click', doit);
 favouritesProductContainer.addEventListener('click', doit);
 
-  console.log("clicked on fav container");
   //If Add Meal to Basket clicked then close modal and update Basket overlay and add items to state.basket.
   const clicked = e.target;
-  console.log(clicked);
 
   if(clicked.id !== "add-to-basket" && clicked.id !== "remove-favs") return; //guard clause to isolate add/remove buttons
 
@@ -645,10 +614,8 @@ favouritesProductContainer.addEventListener('click', doit);
 
   const mealIndex = mealDiv.dataset.index;
 
-  console.log(mealDiv, mealIndex);
   const mealCopy = state.favourites[mealIndex].slice(); /* issue here with duplicates on index??? */
   mealCopy.pop();
-  console.log(mealCopy, state)
 
 
   if(clicked.id === "add-to-basket") {
@@ -664,8 +631,6 @@ favouritesProductContainer.addEventListener('click', doit);
       confirmBasketAdd.addEventListener('click', function confirm(e){
       
         e.stopPropagation();
-        
-      console.log("clicked on confirm button", mealCopy);
       
       state.basket.push(...mealCopy);
       
@@ -682,7 +647,6 @@ favouritesProductContainer.addEventListener('click', doit);
       cancelBasketAdd.addEventListener('click', (e) => {
         e.stopPropagation();
 
-        console.log("clicked on cancel button");
       // Close Dialog
       favMealDialogBasketAdd.close();
 
@@ -692,11 +656,8 @@ favouritesProductContainer.addEventListener('click', doit);
 
   if(clicked.id === "remove-favs") {
 
-    console.log("Remove button clicked");
     // Remove from Favourites
     state.favourites.splice(+[mealIndex], 1)
-
-    console.log(state.favourites);
 
     // Regenerate Favourites
     generateFavs();
@@ -750,10 +711,8 @@ confirmOrder.addEventListener('click', () => {
 // Favourite Meal not Checked
 favouriteCheckbox.addEventListener('change', function() {
   if (this.checked) {
-    console.log("Checkbox is checked..");
     mealNameDiv.style.display = "block";
   } else {
-    console.log("Checkbox is not checked..");
     mealNameDiv.style.display = "none";
   }
 });
@@ -763,14 +722,11 @@ confirmBasket.addEventListener('click', (e) => {
 
   //Validation of Inputs
   const dialogCommit = orderCompletion.children;
-  console.log(dialogCommit);
   const checkedValue = dialogCommit[0].children.favourite.checked;
   const mealNameValue = dialogCommit[1].children.mealname.value;
-  console.log(checkedValue, mealNameValue);
 
   let storedMealNames;
   state.favourites.length > 0 ? storedMealNames = state.favourites.map(arr => arr[arr.length-1]) : storedMealNames = [];
-  console.log(storedMealNames);
 
   if(checkedValue && storedMealNames.includes(mealNameValue)) {
     return renderError("Meal Name Unavailable", favouriteCheckbox); //guard clause to produce alert
@@ -814,7 +770,6 @@ confirmBasket.addEventListener('click', (e) => {
   //generate HTML for orderSummary including state.orderNumber.
   orderNumber.innerText = String(state.orderNumber);
 
-  console.log(state);
 } )
 
 cancelBasket.addEventListener('click', function(e) {orderCompletion.close()});
@@ -838,8 +793,6 @@ navigation.style.display = "flex";
 
 mainContainer.style.display = "block";
 
-console.log(state);
-
 });
 
 // Finish Button Clicked with Print
@@ -851,6 +804,4 @@ orderPrint.addEventListener('click', function(e) {
   window.addEventListener("afterprint", (event) => {
     console.log("After print");
   });
-
-  console.log(state);
 })
