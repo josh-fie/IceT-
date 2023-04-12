@@ -2,7 +2,7 @@
   "name": "juicee",
   "version": "1.0.0",
   "description": "Food Order App",
-  "main": "script.js",
+  "default": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/josh-fie/Juicee#readme",
   "dependencies": {
+    "core.js": "^0.4.2",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {

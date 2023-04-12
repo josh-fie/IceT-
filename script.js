@@ -1,5 +1,11 @@
 "use strict";
 
+import 'core.js/dist/core.js';
+// import images from '';
+// import logos from './logo';
+// const file_name = "file-name"
+// {/* <img src=`${images[file_name]}` /> */}
+
 const container = document.querySelector(".container");
 
 /* Start Page Overlay */
@@ -210,13 +216,13 @@ const generateProducts = (products) => {
         </div>
         <div class="quantity-counter">
           <img
-            src="/logo/minus-sign.svg"
+            src="/minus-sign.169ef0fc.svg"
             alt="Remove from basket"
             class="remove_basket_icon"
           />
           <span class="product-quantity">0</span>
           <img
-            src="/logo/plus-sign.svg"
+            src="/plus-sign.11eec5fe.svg"
             alt="Add to basket"
             class="add_basket_icon"
           />
