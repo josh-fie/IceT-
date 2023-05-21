@@ -1,6 +1,6 @@
 # IceT! Ordering App
 
-This application provides an ordering interface for placing an ice-cream and tea order, favouriting your orders to localStorage, and receiving an order number upon placement.
+This application provides an ordering interface for placing an ice-cream and tea order, favouriting your orders to localStorage, and receiving an order number upon placement. This app was built using vanilla Javascript, HTML and CSS without frameworks.
 
 Any orders that are favourited are stored in localStorage on the browser and will be loaded into the app upon next visit to the app or reloading.
 
